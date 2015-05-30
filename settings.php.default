@@ -1,5 +1,7 @@
 <?php
 
+$settings['base_url'] = "";
+
 $settings['db_host'] = "localhost";
 $settings['db_user'] = "";
 $settings['db_pass'] = "";
@@ -14,5 +16,13 @@ $settings['sections']['mission_history'] = true;
 $settings['sections']['top_players'] = true;
 $settings['sections']['top_missions'] = false;
 
+$settings['log_dir'] = "logs/";
 
+/// ---------- DO NOT CHANGE BELOW THIS LINE ---------- ///
+define ('SIM_ROOT_DIR', __FILE__);
+define ('SIM_BASE_URL', $settings['base_url']);
+
+define ('SIM_DIR_IMG', $settings['root_dir'] . "res/img/");
+define ('SIM_DIR_CSS', $settings['root_dir'] . "res/css/");
+define ('SIM_DIR_JS', $settings['root_dir'] . "res/js/");
  ?>
