@@ -59,7 +59,7 @@ $db = new DbDriver();
 							<div>
 								<table style='table-layout: fixed; width: 100%;'>
 									<tr><td class='sip_title'>Name:</td><td class='sip_value'><? echo $serverinfo['server_name']; ?></td></tr>
-									<tr><td class='sip_title'>Players:</td><td class='sip_value'><? echo $serverinfo['players']; echo "/"; echo $serverinfo['max_players']; if ($serverinfo['players'] == $serverinfo['max_players']) { echo " <span style='color: red;'>FULL!</span>"; } ?></td></tr>
+									<tr><td class='sip_title'>Players:</td><td class='sip_value'><? echo $serverinfo['players']; echo "/"; echo $serverinfo['max_players']; if ($serverinfo['players'] >= $serverinfo['max_players']) { echo " <span style='color: red;'>FULL!</span>"; } ?></td></tr>
 									<tr><td class='sip_title'>Island:</td><td class='sip_value'><? echo $serverinfo['map']; ?></td></tr>
 									<tr><td class='sip_title'>Mission:</td><td class='sip_value'><? echo $serverinfo['mission']; ?></td></tr>
 									<tr><td class='sip_title'>Game Type:</td><td class='sip_value'><? echo $serverinfo['mission_information']['field_43']; ?></td></tr>

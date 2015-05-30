@@ -1,24 +1,65 @@
 <?php
 
-$settings['base_url'] = "";
+if (SIMRegistry::$init == false) {
+    new SIMRegistry();
+}
 
-$settings['db_host'] = "localhost";
-$settings['db_user'] = "";
-$settings['db_pass'] = "";
-$settings['db_database'] = "";
+class SIMRegistry
+{
+    public function __construct()
+    {
 
-$settings['query'][0]['id'] = "";
-$settings['query'][0]['host'] = "";
+        /// ---------- EDIT SETTINGS BELOW THIS LINE ---------- ///
+        
+        self::$settings['base_url'] = "";
+        self::$settings['db_host'] = "";
+        self::$settings['db_user'] = "";
+        self::$settings['db_pass'] = "";
+        self::$settings['db_database'] = "";
 
-$settings['sections']['current_players'] = true;
-$settings['sections']['histogram'] = true;
-$settings['sections']['mission_history'] = true;
-$settings['sections']['top_players'] = true;
-$settings['sections']['top_missions'] = false;
+        self::$settings['query'][0]['id'] = "ID01"; // 4 Character unique identifer for server.
+        self::$settings['query'][0]['host'] = "";
 
-$settings['log_dir'] = "logs/";
+        self::$settings['sections']['current_players'] = true;
+        self::$settings['sections']['histogram'] = true;
+        self::$settings['sections']['mission_history'] = true;
+        self::$settings['sections']['top_players'] = true;
+        self::$settings['sections']['top_missions'] = false;
 
-/// ---------- DO NOT CHANGE BELOW THIS LINE ---------- ///
+        self::$settings['log_dir'] = "logs/";
+
+        self::$settings['using_ips'] = true;
+        self::$settings['ips']['db'] = "";
+
+        // The following defines the database and field names for information.
+        self::$settings['ips']['ccs']['db'] = ""; // ccs database the missions exist in.
+        self::$settings['ips']['ccs']['category'] = ""; // category to look in for live missions.
+        self::$settings['ips']['ccs']['mission_name'] = "";
+        self::$settings['ips']['ccs']['mission_file'] = "";
+        self::$settings['ips']['ccs']['mission_type'] = "";
+        self::$settings['ips']['ccs']['mission_author'] = "";
+        self::$settings['ips']['ccs']['mission_description'] = "";
+        self::$settings['ips']['ccs']['mission_min_slots'] = "";
+        self::$settings['ips']['ccs']['mission_broken'] = ""; // Field containing broken flag.
+
+        /// ---------- DO NOT CHANGE BELOW THIS LINE ---------- ///
+
+        self::$init = true;
+    }
+
+    public function GetSettings()
+    {
+        return $this->settings;
+    }
+
+
+    static $init = false;
+    public static $settings;
+
+}
+
+
+
 
 define ('SIM_ROOT_DIR', __DIR__ . "/");
 define ('SIM_BASE_URL', $settings['base_url']);

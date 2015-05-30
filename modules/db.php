@@ -12,6 +12,9 @@ require_once SIM_ROOT_DIR . 'modules/logger.php';
 
 class DbDriver
 {
+    // Static instance of myself.
+    static $self;
+
     // New logwriter to... write logs...
     var $logger;
 
@@ -23,18 +26,23 @@ class DbDriver
 
     function __construct()
     {
+        // Check if we already exist.
+        if ($self != null) {
+            return $this->self;
+        }
+
         // Create the logwriter.
         $this->logger = new Logger("db.log");
 
         // We check which drivers are installed.
         if (function_exists('mysqli_connect')) {
             // Attempt the connection with mysqli driver. http://php.net/manual/en/mysqli.quickstart.connections.php
-            $this->con = new mysqli($settings['db_host'], $settings['db_user'], $settings['db_pass'], $settings['db_database']);
+            $this->con = new mysqli(SIMRegistry::$settings['db_host'], SIMRegistry::$settings['db_user'], SIMRegistry::$settings['db_pass'], SIMRegistry::$settings['db_database']);
 
             // Check if the connection succeded.
             if ($this->con->connect_errno) {
                 // Oh no, we couldn't connect.
-                $logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
+                $this->logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
 
                 header("HTTP/1.0 500 Internal Server Error");
                 echo "Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error;
@@ -44,7 +52,7 @@ class DbDriver
             // Connection success.
             return true;
         } else {
-            $logger->Write("mysqli module has not been installed or is not active");
+			$this->logger->Write("mysqli module has not been installed or is not active");
 
             header("HTTP/1.0 500 Internal Server Error");
             die("ERROR: mysqli module has not been installed or is not active");
@@ -56,7 +64,7 @@ class DbDriver
     {
         // Execute the query, will return false if an error occurs.
         if (!$res = $this->con->query($query))
-            $logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
+			$this->logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
 
         // Set the driver's internal result... thing.
         $this->last_result = $res;
@@ -78,6 +86,52 @@ class DbDriver
     public function fetch_resource(&$resource)
     {
         return $resource->fetch_assoc();
+    }
+
+    function num_rows() {
+        if ($this->last_result)
+            return $this->result->num_rows;
+
+        return false;
+    }
+
+    function getError() {
+        return $this->con->error;
+    }
+
+    public static function getDriver()
+    {
+        // Check if we already exist, if we don't make me.
+        if ($self == null) {
+            $self = new DbDriver();
+        }
+
+        // Return a reference to this object.
+        return $this->self;
+    }
+
+    public function queryIPB($query)
+    {
+        // Check if we're actually using the IPBoard database or not.
+        if (!SIMRegistry::$settings['using_ips'])
+        {
+            return false;
+        }
+
+        // Switch to the IPBoard database, if it fails return false.
+        if (!$this->con->select_db(SIMRegistry::$settings['ips']['db']))
+        {
+            return false;
+        }
+
+        // Perform the query.
+        $result = $this->query($query);
+
+        // Switch back to the SIM database.
+        $this->con->select_db(SIMRegistry::$settings['db_database']);
+
+        // Pass the result back.
+        return $result;
     }
 
 
