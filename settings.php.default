@@ -1,0 +1,18 @@
+<?php
+
+$settings['db_host'] = "localhost";
+$settings['db_user'] = "";
+$settings['db_pass'] = "";
+$settings['db_database'] = "";
+
+$settings['query']['id'] = "";
+$settings['query']['host'] = "";
+
+$settings['sections']['current_players'] = true;
+$settings['sections']['histogram'] = true;
+$settings['sections']['mission_history'] = true;
+$settings['sections']['top_players'] = true;
+$settings['sections']['top_missions'] = false;
+
+
+ ?>
