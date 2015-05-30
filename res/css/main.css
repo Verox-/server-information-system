@@ -1,0 +1,18 @@
+body,html {	margin:0;	padding:0;	font-family: normal tahoma, helvetica, arial, sans-serif;	background: #1a1a1a;	color: rgb(216, 207, 182);}a:link {	color: white;}/* visited link */a:visited {	color: white;}/* mouse over link */a:hover {    color: rgb(234, 223, 193);}/* selected link */a:active {    color: rgb(216, 207, 182);}.navbar {	background: #333;	display: flex;	padding: 0px 40px;	align-items: center;}.sip_title {	width: 170px;	padding: 5px;	vertical-align: top;}.sip_value {
+    padding: 5px;    vertical-align: top;
+}.outerBox {    border-radius: 10px 10px 0px 0px;    background: rgb(50, 50, 50);}.outerBox h3 {	font: normal 18px tahoma, helvetica, arial, sans-serif;	background: rgb(77, 77, 77);	border-radius: inherit;	padding: 4px 15px;	margin: 0px;}.contentBox {}/*#error_panel {	padding-top: 5px;	padding-bottom: 5px;}*/.errorBox {    padding: 10px;    background: #F4C3C3 url( ./../images/icons/exclamation.png ) no-repeat 9px 10px;    border: 1px solid #AB6775;    font-family: monospace;    padding-left: 35px;    color: black;    margin: 3px 0px;}.warnBox {    padding: 10px;    background: #F4F0C3 url( ./../images/icons/warn.png ) no-repeat 9px 10px;    border: 1px solid #ABAA67;    font-family: monospace;    padding-left: 35px;    color: black;	margin: 3px 0px;}.infoBox {    padding: 10px;    background: #C3DAF4 url(./../images/icons/information.png ) no-repeat 9px 10px;    border: 1px solid #676DAB;    font-family: monospace;    padding-left: 35px;    color: black;	margin: 3px 0px;}#page_content {	max-width: 1024px;	margin: auto;	min-width: 1024px;}#server_header {
+	margin: 0 0 5 0 !important;
+}#server_details {
+    display: table-cell;	padding-right: 5px;
+}#server_quickview {	margin-left:5px;	display: table-cell;}#page_content > div {	margin: 10px 0px 10px 0px;}#player_histogram_image {	display: block;	margin: auto;	padding: 10px;}.missionTable {	width: 100%;	padding: 0px 20px;	border-collapse:collapse;}.missionTable th  {	text-align: left;	padding: 5px 10px;}.missionTable th:first-child {	width: 60%;}.missionTable td {	padding: 10px 15px;}.missionTable tr:nth-child(even)  {
+    background: rgb(50, 50, 50);}.missionTable tr:nth-child(odd)  {
+    background: rgb(60, 59, 58);}.missionTable tfoot td {    text-align: center;    background: rgb(79, 77, 72);    /* padding: 7px; */}.missionTable tfoot .button:hover {	background-color: rgb(70, 116, 200);	cursor: pointer;}.quickbuttons {	list-style-type: none;	text-align: center;}.quickbuttons_list {
+    list-style-type: none;    padding: 0px;
+}.disabled_button {	background: rgb(92, 92, 92) !important;	cursor: default;}ul a {
+    width: 80%;    padding: 8px;
+    color: white;
+    background-color: rgb(176, 158, 112);
+    margin: 2px;
+    border: 0px;
+    display: inline-block;	text-decoration: none;
+}ul a:hover {	background-color: rgb(70, 116, 200);}.playerTable {	width: 100%;	/* padding: 0px 20px; */	border-collapse: collapse;}.playerTable th  {	text-align: left;	padding: 5px 10px;}.playerTable th:first-child {	width: 20%;}.playerTable th:last-child {	width: 75%;}.playerTable td {	padding: 4px 15px;}.playerTable tr {    background: rgb(50, 50, 50);    border-bottom: 1px solid rgb(86, 83, 83);}.playerTable tr:last-child {    border-bottom: 0px;}.playerTable .connected_bar {	background: rgb(255, 206, 81);	height: 5px;	float: left;	overflow: hidden;}.refresh_timer {	font-size: 11px;	font-family: monospace;	float: right;}.extra_missiontext {	font-size: 14px;}footer {	text-align:center;	padding: 10px;	font: 10px monospace;}
