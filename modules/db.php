@@ -1,14 +1,14 @@
 <?php // Database wrapper for MySQL.
 
-if (!IN_SIM) {
+if (!defined("IN_SIM")) {
 	die("SIM did not fully initialise. Did you directly access this file?");
 }
 
 // Make sure the settings file is loaded.
-require_once '../settings.php';
+require_once SIM_ROOT_DIR . 'settings.php';
 
 // Load the logwriter.
-require_once './logger.php';
+require_once SIM_ROOT_DIR . 'modules/logger.php';
 
 class DbDriver
 {
@@ -17,6 +17,9 @@ class DbDriver
 
     // MySQL connetion resource
     var $con;
+
+    // Last result.
+    var $last_result;
 
     function __construct()
     {
@@ -34,26 +37,49 @@ class DbDriver
                 $logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
 
                 header("HTTP/1.0 500 Internal Server Error");
-                die("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
+                echo "Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error;
+                return;
             }
 
             // Connection success.
             return true;
         } else {
+            $logger->Write("mysqli module has not been installed or is not active");
+
             header("HTTP/1.0 500 Internal Server Error");
             die("ERROR: mysqli module has not been installed or is not active");
         }
     }
 
-    public function Query($query)
+
+    public function query($query)
     {
-        // Raw query here.
+        // Execute the query, will return false if an error occurs.
+        if (!$res = $this->con->query($query))
+            $logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
+
+        // Set the driver's internal result... thing.
+        $this->last_result = $res;
+
+        // No problem, return the result.
+        return $this->result;
     }
 
-    public function PreparedQuery()
+    public function prepared_query()
     {
-        # code...
+        return false;
     }
+
+    public function fetch()
+    {
+        return $this->last_result->fetch_assoc();
+    }
+
+    public function fetch_resource(&$resource)
+    {
+        return $resource->fetch_assoc();
+    }
+
 
 }
 

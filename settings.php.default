@@ -7,8 +7,8 @@ $settings['db_user'] = "";
 $settings['db_pass'] = "";
 $settings['db_database'] = "";
 
-$settings['query']['id'] = "";
-$settings['query']['host'] = "";
+$settings['query'][0]['id'] = "";
+$settings['query'][0]['host'] = "";
 
 $settings['sections']['current_players'] = true;
 $settings['sections']['histogram'] = true;
@@ -19,10 +19,11 @@ $settings['sections']['top_missions'] = false;
 $settings['log_dir'] = "logs/";
 
 /// ---------- DO NOT CHANGE BELOW THIS LINE ---------- ///
-define ('SIM_ROOT_DIR', __FILE__);
+
+define ('SIM_ROOT_DIR', __DIR__ . "/");
 define ('SIM_BASE_URL', $settings['base_url']);
 
-define ('SIM_DIR_IMG', $settings['root_dir'] . "res/img/");
-define ('SIM_DIR_CSS', $settings['root_dir'] . "res/css/");
-define ('SIM_DIR_JS', $settings['root_dir'] . "res/js/");
+define ('SIM_DIR_IMG', SIM_BASE_URL . "res/img/");
+define ('SIM_DIR_CSS', SIM_BASE_URL . "res/css/");
+define ('SIM_DIR_JS', SIM_BASE_URL . "res/js/");
  ?>
