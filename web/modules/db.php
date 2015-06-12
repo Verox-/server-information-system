@@ -63,14 +63,11 @@ class DbDriver
     public function query($query)
     {
         // Execute the query, will return false if an error occurs.
-        if (!$res = $this->con->query($query))
-			$this->logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
-
-        // Set the driver's internal result... thing.
-        $this->last_result = $res;
+        if (!$this->last_result = $this->con->query($query))
+			echo "Failed to query MySQL: (" . $this->con->error . ")"; //$this->logger->Write("Failed to connect to MySQL: (" . $this->con->connect_errno . ") " . $this->con->connect_error);
 
         // No problem, return the result.
-        return $this->result;
+        return $this->last_result;
     }
 
     public function prepared_query()
@@ -90,7 +87,7 @@ class DbDriver
 
     function num_rows() {
         if ($this->last_result)
-            return $this->result->num_rows;
+            return $this->last_result->num_rows;
 
         return false;
     }
@@ -102,12 +99,12 @@ class DbDriver
     public static function getDriver()
     {
         // Check if we already exist, if we don't make me.
-        if ($self == null) {
-            $self = new DbDriver();
+        if (self::$self == null) {
+            self::$self = new DbDriver();
         }
 
         // Return a reference to this object.
-        return $this->self;
+        return self::$self;
     }
 
     public function queryIPB($query)

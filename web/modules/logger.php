@@ -15,7 +15,7 @@ class Logger
             $this->logpath = SIM_ROOT_DIR . SIMRegistry::$settings['log_dir'] . $log_name;
             return false;
         }
-
+        
         $this->logpath = SIM_ROOT_DIR . SIMRegistry::$settings['log_dir'] . $log_name;
     }
 

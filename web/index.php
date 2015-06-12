@@ -12,7 +12,10 @@ require_once './modules/all_modules.php';
 // Create the database driver.
 $db = new DbDriver();
 
-
+// Get the server's basic info.
+$basic_info = new ServerBasicInfo();
+$serverinfo = $basic_info->GetServerInfo();
+var_dump($serverinfo);
  ?>
 
 <!DOCTYPE html>
