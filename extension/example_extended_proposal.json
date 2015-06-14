@@ -1,0 +1,26 @@
+{
+    "time": "102030",
+    "units": [
+        {
+            "nid": "00000000000000000000000000",
+            "uid": "00000000000000000000000000000000",
+            "pos": "[-00000.00, -00000.00, -0.000000]",
+            "veh": "<vehicle nid or empty if not in veh>",
+            "wep": "current weapon class? or empty if none"
+        },
+        {
+            "nid": "00000000000000000000000000",
+            "uid": "00000000000000000000000000000000",
+            "pos": "[-00000.00, -00000.00, -0.000000]",
+            "veh": "<vehicle nid or empty if not in veh>",
+            "wep": "current weapon class? or empty if none"
+        },
+        {
+            "nid": "00000000000000000000000000",
+            "uid": "00000000000000000000000000000000",
+            "pos": "[-00000.00, -00000.00, -0.000000]",
+            "veh": "<vehicle nid or empty if not in veh>",
+            "wep": "current weapon class? or empty if none"
+        }
+    ]
+}
