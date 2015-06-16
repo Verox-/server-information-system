@@ -17,6 +17,11 @@ namespace Simulator
             {
                 switch (Console.ReadLine())
                 {
+                    case "SPAM":
+                        Console.WriteLine("SPAMMING!");
+                        DataSpammer.CreateSpammedData(400, 1800);
+                        Console.WriteLine("SPAMED!");
+                        break;
                     case "S":
                         Simulator.RVExtension("S21234");
                         break;
@@ -41,6 +46,40 @@ namespace Simulator
         static string SendRandomData()
         {
             return "Data.";
+        }
+    }
+
+    class DataSpammer
+    {
+        const string json_header = "{\"time\":\"";
+        const string json_header2 = "\",\"units\": [";
+        const string json_footer = "]}";
+
+
+        public static void CreateSpammedData(int units, int timepoints)
+        {
+            // Create the random unit IDs
+            string [] ids = new string[units];
+            Random rd = new Random();
+
+            
+
+            for (int i = 0; i < units; i++) {
+                ids[i] = rd.Next(10000000, 99999999).ToString() + rd.Next(10000000, 99999999).ToString() + rd.Next(10000000, 99999999).ToString() + rd.Next(10000000, 99999999).ToString();
+            }
+
+            for (int i = 0; i < timepoints; i++)
+            {
+                StringBuilder datapoint = new StringBuilder();
+                datapoint.Append(json_header + (i * 10) + json_header2);
+
+                foreach (string id in ids) {
+                    datapoint.Append("{\"nid\": \"" + rd.Next(1000,10000).ToString() + "\",\"uid\": \"" + id + "\",\"pos\": \"[" + rd.Next(0,10000).ToString() + ","+ rd.Next(0,10000).ToString() + ","+ rd.Next(0,10000).ToString() + "]\", \"fac\": \"WEST\", \"dir\": \"" + rd.Next(0,360) + "\"},");
+                }
+
+                datapoint.Append(json_footer);
+                File.AppendAllText("C:\\tester.txt", datapoint.ToString());
+            }
         }
     }
 
