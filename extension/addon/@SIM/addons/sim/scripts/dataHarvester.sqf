@@ -15,10 +15,10 @@ sleep 1;
 diag_log "SIM_AAR: Starting data harvester.";
 
 // Let the extension know we're starting a new mission.
-	"SIMExt" callExtension "B";
+"SIMExt" callExtension format["""B%1.%2""", missionName, worldName];
 
-while {true} do {
-
+while {getClientState == "BRIEFING READ"} do {
+	
 	// Let the extension know we're starting a new loop.
 	"SIMExt" callExtension format["S%1", time];
 	
@@ -33,12 +33,12 @@ while {true} do {
 	
 	// Let the extension know that's all the units.
 	"SIMExt" callExtension "E";
-	
+
 	// Sleep for some seconds.
 	uiSleep 3;
-}
+};
 
 // We're exiting the mission.
-	"SIMExt" callExtension format["F%1", time];
+"SIMExt" callExtension format["F%1", time];
 
 diag_log "SIM_AAR: Ending data harvester.";
