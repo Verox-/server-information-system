@@ -13,12 +13,15 @@ namespace SIMExt
 {
     public class DllEntry
     {
+        const string unique_server_id = "SRV1";
+
         // Constant JSON structure.
         
-        const string json_data_header = "\"time\":\"{0}\",\"units\": [";
+        const string json_data_header = "\"time\":{0},\"units\": [";
         const string json_data_footer = "]";
 
         static bool ready = true;
+        static string mission_playthrough_hash;
 
         // Strinbuilder for fun.
         static StringBuilder datastring = new StringBuilder();
@@ -29,6 +32,10 @@ namespace SIMExt
         [DllExport("_RVExtension@12", CallingConvention = System.Runtime.InteropServices.CallingConvention.Winapi)]
         public static void RVExtension(StringBuilder output, int outputSize, [MarshalAs(UnmanagedType.LPStr)] string function)
         {
+#if DEBUG
+            DebugToFile(function);
+#endif
+
             if (function[0] == 'S') // Started a unit report.
             {
                 if (!pipe.IsConnected) { HandleBrokenConnection(); } // Check the pipe is still connected, if it isn't try to reconnect.
@@ -44,8 +51,12 @@ namespace SIMExt
             }
             else if (function[0] == 'E') // Ended a unit report.
             {
+                // If the mission start isn't set then this loop is broken. Exit immediatley.
+                if (mission_playthrough_hash == null)
+                    return;
+
                 // Get rid of the last comma to make it valid json.
-                datastring.Remove(datastring.Length - 2, 1);
+                datastring.Remove(datastring.Length - 1, 1);
 
                 // Append the final closing bracket for the json.
                 datastring.Append(json_data_footer);
@@ -64,15 +75,23 @@ namespace SIMExt
             }
             else if (function[0] == 'B') // Started a new mission.
             {
-                SendToDaemon("start_mission", function.Substring(1));
+                var mission = function.Substring(1);
+
+                // Set the mission start timestamp.
+                mission_playthrough_hash = GenerateMD5UniqueID(mission);
+                
+                SendToDaemon("start_mission", "\"mission\": \"" + mission + "\"");
             }
             else if (function[0] == 'F') // Finished the current mission.
             {
-                if (!SendToDaemon("end_mission", "time:" + function.Substring(1)))
+                if (!SendToDaemon("end_mission", "\"time\":" + function.Substring(1)))
                 {
                     // Something went wrong.
                     output.Append("PIPE");
                 }
+
+                // Reset the mission start timestamp.
+                mission_playthrough_hash = null;
             }
             else
             {
@@ -88,7 +107,7 @@ namespace SIMExt
         private static bool SendToDaemon(string event_type, string data, bool retry = false)
         {
             // Wrap the data.
-            string data_to_send = "{\"event\":\"" + event_type + "\",\"data\":{" + data + "}\n";
+            string data_to_send = "{\"event\":\"" + event_type + "\",\"hash\": \"" + mission_playthrough_hash + "\",\"data\":{" + data + "}}\n";
 
             // Write and flush to the pipe. This needs to be async.
             try
@@ -109,18 +128,59 @@ namespace SIMExt
                 HandleBrokenConnection();
 
                 // then try again...
-                SendToDaemon(event_type, data, true);
+                return SendToDaemon(event_type, data, true);
             }
 
             // Success, return.
             return true;
         }
 
+        /// <summary>
+        /// Generates an MD5 hash on the mission start time (in format yyyyMMddHHmmss) + mission name + . + mission map.
+        /// This should only be called when the mission is first started.
+        /// </summary>
+        /// <param name="mission">Formatted string of mission_name.mission_map e.g. TestMission.Altis</param>
+        /// <returns>Generated MD5 hash uniquely identifying this playthough.</returns>
+        private static string GenerateMD5UniqueID(string mission)
+        {
+            string plaintext_identifier = DateTime.Now.ToString("yyyyMMddHHmmss") + mission;
+
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                // Convert the pt ident to an array of bytes.
+                byte[] inBytes = Encoding.ASCII.GetBytes(plaintext_identifier);
+
+                // Compute the hash.
+                byte[] hash = md5.ComputeHash(inBytes);
+
+                // Convert the array of bytes to a string.
+                StringBuilder hash_str = new StringBuilder();
+                for (int i = 0; i < hash.Length; i++)
+                {
+                    hash_str.Append(hash[i].ToString("X2"));
+                }
+
+                return hash_str.ToString();
+            }
+
+            return null;
+        }
+
+        private static void DebugToFile(string dt)
+        {
+#if DEBUG
+            System.IO.StreamWriter file = new System.IO.StreamWriter("c:\\UOTEST.txt", true);
+            file.WriteLine(dt);
+
+            file.Close();
+#endif
+        }
+
         private static void HandleBrokenConnection()
         {
             try
             {
-                pipe = new NamedPipeClientStream(".", "SIMSRV1", PipeDirection.Out, PipeOptions.WriteThrough);
+                pipe = new NamedPipeClientStream(".", "SIM" + unique_server_id, PipeDirection.Out, PipeOptions.WriteThrough);
                 ss = new StreamWriter(pipe);
             }
             catch
