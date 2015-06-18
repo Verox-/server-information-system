@@ -107,7 +107,7 @@ namespace SIMExt
         private static bool SendToDaemon(string event_type, string data, bool retry = false)
         {
             // Wrap the data.
-            string data_to_send = "{\"event\":\"" + event_type + "\",\"hash\": \"" + mission_playthrough_hash + "\",\"data\":{" + data + "}}\n";
+            string data_to_send = "{\"server_id\": \"" + unique_server_id + "\",\"event\":\"" + event_type + "\",\"hash\": \"" + mission_playthrough_hash + "\",\"data\":{" + data + "}}\n";
 
             // Write and flush to the pipe. This needs to be async.
             try
