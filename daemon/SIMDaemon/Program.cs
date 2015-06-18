@@ -13,7 +13,6 @@ namespace SIMDaemon
 {
     class Program
     {
-        const string unique_pipe_name = "SIMSRV1";
         const string unique_server_name = "SRV1";
         const string unique_pipe_name = "SIM" + unique_server_name;
 
