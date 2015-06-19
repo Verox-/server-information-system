@@ -7,15 +7,26 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using System.Runtime.InteropServices;
 using System.Net.Http;
 
 namespace SIMDaemon
 {
     class Program
     {
+        #region NaitiveImports
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+        #endregion
+
         const string unique_server_name = "SRV1";
         const string unique_pipe_name = "SIM" + unique_server_name;
-
 
         static NamedPipeServerStream pipeServer;
         static HttpClient inet = new HttpClient();
@@ -59,6 +70,11 @@ namespace SIMDaemon
                 pipeServer.WaitForConnection();
                 Console.WriteLine("[INFO/PIPE/simext] Connection established on pipe!");
 
+                #if !DEBUG
+                // Hide the window, we don't need it show it anymore unless something breaks.
+                ShowWindow(false);
+                #endif
+
                 // While we have a connection
                 while (pipeServer.IsConnected) {
                     #if DEBUG           
@@ -75,7 +91,28 @@ namespace SIMDaemon
                     #endif
                 }
 
+                #if !DEBUG
+                // Pipe disconnected, show the window.
+                ShowWindow(true);
+                #endif
+
                 Console.Write("[WARN/PIPE/simext] Pipe disconnected... "); // ACH, AIT ALL GON TITS UP, ERRR!               
+            }
+        }
+
+        static void ShowWindow(bool show)
+        {
+            var handle = GetConsoleWindow();
+
+            if (show)
+            {
+                // Show
+                ShowWindow(handle, SW_SHOW);
+            }
+            else
+            {
+                // Hide
+                ShowWindow(handle, SW_HIDE);
             }
         }
 
