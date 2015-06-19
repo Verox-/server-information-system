@@ -34,6 +34,9 @@ while {getClientState == "BRIEFING READ"} do {
 		"SIMExt" callExtension _data;
 	} forEach allUnits;
 	
+	// Log the FPS of the server.
+	"SIMExt" callExtension format["L%1", diag_fps];
+	
 	// Let the extension know that's all the units.
 	"SIMExt" callExtension "E";
 
