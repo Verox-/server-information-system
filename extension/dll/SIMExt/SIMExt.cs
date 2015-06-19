@@ -22,6 +22,7 @@ namespace SIMExt
 
         static bool ready = true;
         static string mission_playthrough_hash;
+        static string last_fps = "50";
 
         // Strinbuilder for fun.
         static StringBuilder datastring = new StringBuilder();
@@ -93,6 +94,10 @@ namespace SIMExt
                 // Reset the mission start timestamp.
                 mission_playthrough_hash = null;
             }
+            else if (function[0] == 'L') // Load indicator (fps).
+            {
+                last_fps = function.Substring(1);
+            }
             else
             {
                 datastring.Append('{');
@@ -107,7 +112,7 @@ namespace SIMExt
         private static bool SendToDaemon(string event_type, string data, bool retry = false)
         {
             // Wrap the data.
-            string data_to_send = "{\"server_id\": \"" + unique_server_id + "\",\"event\":\"" + event_type + "\",\"hash\": \"" + mission_playthrough_hash + "\",\"data\":{" + data + "}}\n";
+            string data_to_send = "{\"server_id\": \"" + unique_server_id + "\",\"event\":\"" + event_type + "\",\"hash\": \"" + mission_playthrough_hash + "\",\"fps\": " + last_fps + ",\"data\":{" + data + "}}\n";
 
             // Write and flush to the pipe. This needs to be async.
             try

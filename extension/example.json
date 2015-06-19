@@ -1,9 +1,10 @@
 // Constant JSON
 {
-    "server_id": "SRVX",
-    "event": "<ValidEvent>",
-    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
-    "data": { }
+    "server_id": "SRVX", // Unique server identifier constant across services.
+    "event": "<ValidEvent>", // Event type.
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF", // MD5 hash of mission start time + mission.
+	"fps": 00.000 // Current FPS average over the last 16 frames.
+    "data": { } // Data relating to the event.
 }
 
 // EVENT: start_mission
@@ -11,8 +12,9 @@
 	"server_id": "SRVX",
     "event": "start_mission",
     "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+	"fps": 00.000
     "data": {
-        "mission": "mission_filename.island"
+        "mission": "mission_filename.island" // Mission filename.island
     }
 }
 
@@ -21,8 +23,9 @@
     "server_id": "SRVX",
     "event": "end_mission",
     "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+	"fps": 00.000
     "data": {
-        "time": 00.000
+        "time": 00.000 // Time since mission start, in seconds.
     }
 }
 
@@ -31,15 +34,16 @@
 	"server_id": "SRVX",
     "event": "update",
     "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+	"fps": 00.000
     "data": {
-        "time": 00.000,
+        "time": 00.000, // Time since mission start, in seconds.
         "units": [
             {
-                "nid": "0:000",
-                "uid": "00000000000000000",
-                "pos": "[0000.00,0000.00,0000.00]",
-                "fac": "CIV",
-                "dir": "000.00"
+                "nid": "0:000", // Network ID
+                "uid": "00000000000000000", // Unique ID (SteamID64 if player, blank if AI)
+                "pos": "[0000.00,0000.00,0000.00]", // Position XYZ
+                "fac": "CIV", // Faction
+                "dir": "000.00" // Direction 0-360.
             }
         ]
     }
@@ -50,8 +54,9 @@
 	"server_id": "SRVX",
     "event": "kill",
     "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+	"fps": 00.000
     "data": {
-        "time": 00.000,
+        "time": 00.000, // Time since mission start, in seconds.
         // data format tbd.
     }
 }
