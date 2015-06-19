@@ -1,23 +1,57 @@
+// Constant JSON
 {
-    "time": "102030",
-    "units": [
-        {
-            "nid": "00000000000000000000000000",
-            "uid": "00000000000000000000000000000000",
-            "pos": "[2412.01, 6036.33, -0.920066]",
-            "side": "CIV"
-        }
-        {
-            "nid": "00000000000000000000000001",
-            "uid": "00100000000004000000000300000500",
-            "pos": "[2412.01, 6036.33, -0.920066]",
-            "side": "CIV"
-        }
-        {
-            "nid": "00000000000000000000000002",
-            "uid": "00040000000024000000003200000010",
-            "pos": "[2412.01, 6036.33, -0.920066]",
-            "side": "CIV"
-        }
-    ]
+    "server_id": "SRVX",
+    "event": "<ValidEvent>",
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+    "data": { }
+}
+
+// EVENT: start_mission
+{
+	"server_id": "SRVX",
+    "event": "start_mission",
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+    "data": {
+        "mission": "mission_filename.island"
+    }
+}
+
+// EVENT: end_mission
+{
+    "server_id": "SRVX",
+    "event": "end_mission",
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+    "data": {
+        "time": 00.000
+    }
+}
+
+// EVENT: update
+{
+	"server_id": "SRVX",
+    "event": "update",
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+    "data": {
+        "time": 00.000,
+        "units": [
+            {
+                "nid": "0:000",
+                "uid": "00000000000000000",
+                "pos": "[0000.00,0000.00,0000.00]",
+                "fac": "CIV",
+                "dir": "000.00"
+            }
+        ]
+    }
+}
+
+// EVENT: kill (NOT IMPLEMENTED YET).
+{
+	"server_id": "SRVX",
+    "event": "kill",
+    "hash": "00FF00FF00FF00FF00FF00FF00FF00FF",
+    "data": {
+        "time": 00.000,
+        // data format tbd.
+    }
 }

@@ -17,6 +17,9 @@ diag_log "SIM_AAR: Starting data harvester.";
 // Let the extension know we're starting a new mission.
 "SIMExt" callExtension format["B%1.%2", missionName, worldName];
 
+// Sleep for a few seconds to prevent race.
+uiSleep 3;
+
 while {getClientState == "BRIEFING READ"} do {
 	
 	// Let the extension know we're starting a new loop.
