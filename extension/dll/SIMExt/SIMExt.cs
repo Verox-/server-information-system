@@ -57,8 +57,11 @@ namespace SIMExt
                     return;
 
                 // Get rid of the last comma to make it valid json.
-                datastring.Remove(datastring.Length - 1, 1);
-
+                if (datastring[datastring.Length - 1] == ',')
+                {
+                    datastring.Remove(datastring.Length - 1, 1);
+                }
+                
                 // Append the final closing bracket for the json.
                 datastring.Append(json_data_footer);
                 
