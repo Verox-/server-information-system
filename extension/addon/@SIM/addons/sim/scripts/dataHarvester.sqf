@@ -28,7 +28,7 @@ while {getClientState == "BRIEFING READ"} do {
 	// -- Start the unit loop --
 	{
 		// Get the data for current unit and format it in spec. format.
-		_data = format["""nid"": ""%1"",""uid"": ""%2"",""pos"": ""%3"", ""fac"": ""%4"", ""dir"": ""%5""", netId _x, getPlayerUID _x, getPosASL _x, side _x, getDir _x];
+		_data = format["""nid"": ""%1"",""uid"": ""%2"",""pos"": ""%3"", ""fac"": ""%4"", ""dir"": ""%5"", ""name"": ""%6"", ""group"": ""%7""", netId _x, getPlayerUID _x, getPosASL _x, side _x, getDir _x, name _x, group _x];
 		
 		// Send this unit's data to the extension.
 		"SIMExt" callExtension _data;

@@ -6,7 +6,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
         <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-        <script src="./res/js/mapControl.js" defer></script>
+        <script src="./res/js/liveMapControl.js" defer></script>
         <script src="./res/js/markerControl.js" defer></script>
         <style>
             html, body, #map, #mapContainer {

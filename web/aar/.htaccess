@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule    ^replay/([\w]+)/?$    replay.php?id=$1    [NC,L]    # Replay URLs
+RewriteRule    ^live/?$    live.php    [NC,L]    # Live URL

@@ -10,53 +10,66 @@ source.onmessage = function(event) {
     }
 
    var units = JSON.parse(event.data);
-   for (var key in units)
-   {
-       units[key].pos = GameCoordToLatLng(units[key].pos);
-
-       if (!(key in markers))
-       {
-           var sideColor = GetSideColor(units[key].fac, units[key].uid);
-
-           var popupTitle = "Player: " + units[key].uid + "<br />Waiting for update";
-           if (units[key].uid == "")
-           {
-               popupTitle = "AI<br />Waiting for Update.";
-           }
-
-           // Add the markah.
-           markers[key] = L.circle(units[key].pos, 500,
-           {
-               color: sideColor,
-           }).addTo(map);
+   UpdateMapMarkers(units);
 
 
-           markers[key].bindPopup("<b>" + popupTitle + "</b>");
-           console.log("new");
-       }
-       else
-       {
-           // Update the markah.
-           markers[key].setLatLng(units[key].pos);
-           //markers[key].update(); // DOn't need this for circles
-           //markers[key].setStyle({color: GetSideColor(units[key].fac, units[key].uid)})
-           //
-           // Update the CPOS.
-           markers[key].bindPopup("UID: " + units[key].uid + "<br />MPOS: " + markers[key].getLatLng().toString() + "<br />GPOS: GameCoord(" + LatLngToGameCoord(markers[key].getLatLng()) + ")<br />FAC: " +  units[key].fac + "<br />DIR: " +  units[key].dir)
-           console.log("update");
-       }
-   }
+}
 
-   for (var key in markers)
-   {
-       if (!(key in units))
-       {
-           map.removeLayer(markers[key]);
-           delete markers[key];
-           console.log("remove");
-       }
-   }
-   console.log(units);
+
+
+function UpdateMapMarkers(units)
+{
+    for (var key in units)
+    {
+        units[key].pos = GameCoordToLatLng(units[key].pos);
+
+        if (!(key in markers))
+        {
+            var sideColor = GetSideColor(units[key].fac, units[key].uid);
+
+            var popupTitle = "Player: " + units[key].uid + "<br />Waiting for update";
+            if (units[key].uid == "")
+            {
+                popupTitle = "AI<br />Waiting for Update.";
+            }
+
+            // Add the markah.
+            markers[key] = L.circle(units[key].pos, 500,
+            {
+                color: sideColor,
+            }).addTo(map);
+
+
+            markers[key].bindPopup("<b>" + popupTitle + "</b>");
+            console.log("new");
+        }
+        else
+        {
+            // Update the markah.
+            markers[key].setLatLng(units[key].pos);
+            //markers[key].update(); // DOn't need this for circles
+            //markers[key].setStyle({color: GetSideColor(units[key].fac, units[key].uid)})
+            //
+            //
+            if (units[key].uid == "") {
+                units[key].name = units[key].name + " (AI)"
+            }
+            // Update the CPOS.
+            markers[key].bindPopup("<h3>" + units[key].name + "</h3>UID: " + units[key].uid + "<br />MPOS: " + markers[key].getLatLng().toString() + "<br />GPOS: GameCoord(" + LatLngToGameCoord(markers[key].getLatLng()) + ")<br />FAC: " +  units[key].fac + "<br />DIR: " +  units[key].dir)
+            console.log("update");
+        }
+    }
+
+    for (var key in markers)
+    {
+        if (!(key in units))
+        {
+            map.removeLayer(markers[key]);
+            delete markers[key];
+            console.log("remove");
+        }
+    }
+    console.log(units);
 }
 
 function GetSideColor(side, player)
