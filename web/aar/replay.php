@@ -31,6 +31,7 @@ function jxgcompress($filename)
         <script src="/res/js/lib/RotatedMarker/L.RotatedMarker.js"></script>  <!--https://github.com/bbecquet/Leaflet.PolylineDecorator/blob/leaflet-0.7.2/src/L.RotatedMarker.js-->
         <script type="text/javascript">
             var replay_base64 = "<?php try {echo jxgcompress("./replays/{$_GET['id']}.replay");} catch (Exception $ex) {echo "ERROR";} ?>";
+            var initialFramePointer = <?php echo (isset($_GET['frame']) && is_numeric($_GET['frame']) ? $_GET['frame'] : 0)?>;
         </script>
         <style>
             html, body, #map, #mapContainer {
@@ -58,33 +59,59 @@ function jxgcompress($filename)
         </style>
     </head>
     <body>
-        <style>.</style>
-    <style>
-.seekerContainer {
-background:#fff;
-position:absolute;
-bottom:20px;
-left:5%;
-padding:5px;
-z-index:100;
-width: 90%;
-border-radius:3px;
-}
+        <style>
+            .controlsContainer {
+                background:#fff;
+                position:absolute;
+                bottom:20px;
+                left:5%;
+                padding:5px;
+                z-index:100;
+                width: 90%;
+                border-radius:3px;
+                opacity: 0.4;
+                display:flex;
+                align-items:center;
+            }
 
-.abutton {
-    appearance: button;
-    -moz-appearance: button;
-    -webkit-appearance: button;
-    text-decoration: none; font: menu; color: ButtonText;
-    display: inline-block; padding: 2px 8px;
-}
-</style>
-<div id='output' id='seekerContainer' class='seekerContainer' style="display: none;">
-    <input style="width:80%" id="replaySeeker" type ="range" min ="0" max="100" value ="1"/>
-    <span id="dTime">INITIALZING</span>
-    <a id="stopButton" class="abutton" value ="" disabled><i class='fa fa-stop'></i></a>
-    <a id="playButton" class="abutton" value ="" disabled><i class='fa fa-play'></i></a>
-</div>
+            .controlsContainer:hover
+            {
+                opacity: 1.0;
+            }
+
+            .abutton {
+                appearance: button;
+                -moz-appearance: button;
+                -webkit-appearance: button;
+                text-decoration: none; font: menu; color: ButtonText;
+                display: inline-block; padding: 2px 8px;
+            }
+
+            .controlsContainer #staticLinkButton {
+                margin: 0px 3px 0px 3px;
+            }
+
+            .controlsContainer #replaySeeker {
+                margin: auto;
+            }
+
+            .controlsContainer #playPauseButton {
+                margin: 0px 5px;
+            }
+
+            .replayTimeContainer {
+                align-self: flex-end;
+            }
+
+        </style>
+        <div id='output' id='controlsContainer' class='controlsContainer' style="display: none;">
+            <i id="staticLinkButton" class="fa fa-link"></i>
+            <input id="replaySeeker" style="min-width:75%" type ="range" min ="0" max="100" value ="1"/>
+            <button id="playPauseButton"><i class='fa fa-play'></i></button>
+            <div class="replayTimeContainer">
+                <span id="dTime">-------</span>/<span id="tTime">-------</span>
+            </div>
+        </div>
         <div id="mapContainer">
 
 

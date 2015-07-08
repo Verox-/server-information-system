@@ -11,6 +11,7 @@ class LiveCache
     const MISSION_ISLAND = ":mission:island";
     const MISSION_NAME = ":mission:name";
 
+    const UNIT_PREFIX = "UNIT:";
     const UNIT_POSITION = "pos";
     const UNIT_DIRECTION = "dir";
     const UNIT_FACTION = "fac";
@@ -131,7 +132,7 @@ class LiveCache
             );
 
             // Add the hash.
-            $this->redis->hmset($unit['nid'], $members);
+            $this->redis->hmset(self::UNIT_PREFIX . $unit['nid'], $members);
             $this->redis->setTimeout($unit['nid'], 10); // Unit has 10 seconds to send an update before it expires.
         }
 

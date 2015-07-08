@@ -91,7 +91,7 @@ function UpdateMapMarkers(units)
         //markers[markerRemoveQueue[key]] = undefined;
         console.log("remove");
     }
-    console.log(units);
+    //console.log(units);
 }
 
 function GetSideColor(side, player)
@@ -159,10 +159,9 @@ function GetSideIcon(side, player)
 //// --- Utility functions to convert coords --- ////
 function LatLngToGameCoord(ltln)
 {
-   var coord_x = (ltln.lng + 0.58593) * mapInfo.scaleFactor;
-   var coord_y = (ltln.lat + 43.5702981355) * mapInfo.scaleFactor;
-   coord_x = coord_x.toFixed(2);
-   coord_y = coord_y.toFixed(2);
+   var coord_x = (ltln.lng + mapInfo.latOriginOffset) * mapInfo.scaleFactor;
+   var coord_y = (ltln.lat + mapInfo.lngOriginOffset) * mapInfo.scaleFactor;
+
    return [coord_y, coord_x];
 }
 
@@ -181,7 +180,6 @@ function GameCoordToLatLng(coord)
 {
    var coord_array  = JSON.parse(coord); // For fuck sake.
 
-   // This is placeholder code.
    var coord_x = (coord_array[0] / mapInfo.scaleFactor) - mapInfo.latOriginOffset;
    var coord_y = (coord_array[1] / mapInfo.scaleFactor) - mapInfo.lngOriginOffset;
 

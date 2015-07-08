@@ -1,0 +1,17 @@
+Libraries, software, people and other things used in the creation of this tool:
+
+LIBRARIES
+    FRONTEND
+        JXG's jscompressor - Decompressing gzipped files in javascript. - http://jsxgraph.uni-bayreuth.de/wp/
+        bbecquet's L.RotatedMarker - Providing a method of rotating markers in Leaflet - https://github.com/bbecquet/Leaflet.PolylineDecorator
+        Leaflet JS - Lightweight in-browser map. - http://leafletjs.com/
+        jQuery - You know what this is.
+        FontAwesome - Many, many SVG icons for free! - http://fontawesome.io/
+        10T's Arma Maps - Some of the maps (the nice ones) are created by 10T - http://forums.bistudio.com/showthread.php?178671-Tiled-maps-Google-maps-compatible-%28WIP%29
+
+    BACKEND
+        phpredis - Fast PHP interface to Redis server. - https://github.com/phpredis/phpredis
+
+SOFTWARE
+    BACKEND
+        Redis - Extremely fast data structure server.  - http://redis.io/

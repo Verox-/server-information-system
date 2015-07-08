@@ -69,7 +69,7 @@ function UpdateMapMarkers(units)
             console.log("remove");
         }
     }
-    console.log(units);
+    //console.log(units);
 }
 
 function GetSideColor(side, player)

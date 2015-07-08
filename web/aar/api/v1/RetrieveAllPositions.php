@@ -21,7 +21,7 @@ while (true) {
     // Wipe the array, just to be sure.
     $unitsArray = array();
     $it = NULL; /* Initialize our iterator to NULL */
-    while($arr_keys = $redis->scan($it)) {
+    while($arr_keys = $redis->scan($it, "UNIT:*")) {
         foreach($arr_keys as $str_key) {
             //echo "Here is a key: $str_key\n";
             $unitsArray[$str_key] = $redis->hGetAll($str_key);
