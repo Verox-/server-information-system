@@ -10,7 +10,7 @@ function UpdateMapMarkers(units)
 
     for (var key in units)
     {
-        units[key].pos = GameCoordToLatLng(units[key].pos);
+        units[key].latlng = GameCoordToLatLng(units[key].pos);
         var uNid = units[key].nid;
         if (markers[uNid] == null)
         {
@@ -38,7 +38,7 @@ function UpdateMapMarkers(units)
                 popupAnchor: [2, -4]
             } );
 
-            markers[uNid] = L.rotatedMarker( units[key].pos, { icon: mySVGIcon, angle:units[key].dir} ).addTo(map);
+            markers[uNid] = L.rotatedMarker( units[key].latlng, { icon: mySVGIcon, angle:units[key].dir} ).addTo(map);
 
             markers[uNid].bindPopup("<b>" + popupTitle + "</b>");
             console.log("new");
@@ -46,7 +46,7 @@ function UpdateMapMarkers(units)
         else
         {
             // Update the markah.
-            markers[uNid].setLatLng(units[key].pos); //https://groups.google.com/forum/#!topic/leaflet-js/GSisdUm5rEc
+            markers[uNid].setLatLng(units[key].latlng); //https://groups.google.com/forum/#!topic/leaflet-js/GSisdUm5rEc
             markers[uNid].update(); // DOn't need this for circles
             markers[uNid].setAngle(units[key].dir);
             //markers[key].setStyle({color: GetSideColor(units[key].fac, units[key].uid)})
@@ -67,7 +67,7 @@ function UpdateMapMarkers(units)
                 unitName = units[key].name;
             }
 
-            var popupContent = "<h3>" + unitName + "</h3>UID: " + units[key].uid + "<br />MPOS: " + markers[uNid].getLatLng().toString() + "<br />GPOS: GameCoord(" + LatLngToGameCoord(markers[uNid].getLatLng()) + ")<br />FAC: " +  units[key].fac + "<br />DIR: " +  units[key].dir
+            var popupContent = "<h3>" + unitName + "</h3>UID: " + units[key].uid + "<br />MPOS: " + markers[uNid].getLatLng().toString() + "<br />CPOS: GameCoord(" + units[key].pos + ")<br />GRID: Grid(" + GameCoordToGrid(units[key].pos) + ")<br />FAC: " +  units[key].fac + "<br />DIR: " +  units[key].dir
 
             if (units[key].uid == "") {
                 units[key].name = units[key].name + " (AI)"
@@ -174,6 +174,24 @@ function LatLngToGrid(ltln)
    //coord_y = num.toPrecision(4);
 
    return [coord_y, coord_x];
+}
+
+function GameCoordToGrid(coord)
+{
+    function pad(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    }
+
+    var coord_array  = JSON.parse(coord);
+    var northing = Math.floor(coord_array[0] / 10);
+    var easting = Math.floor(coord_array[1] / 10);
+
+    northing = pad(northing, 4);
+    easting = pad(easting, 4);
+
+    return northing + easting;
 }
 
 function GameCoordToLatLng(coord)
