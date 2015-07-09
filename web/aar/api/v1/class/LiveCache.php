@@ -133,7 +133,7 @@ class LiveCache
 
             // Add the hash.
             $this->redis->hmset(self::UNIT_PREFIX . $unit['nid'], $members);
-            $this->redis->setTimeout($unit['nid'], 10); // Unit has 10 seconds to send an update before it expires.
+            $this->redis->setTimeout(self::UNIT_PREFIX . $unit['nid'], 10); // Unit has 10 seconds to send an update before it expires.
         }
 
         // Execute the transaction & exit pipeline mode.
