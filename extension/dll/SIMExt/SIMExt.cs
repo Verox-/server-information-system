@@ -23,9 +23,10 @@ namespace SIMExt
         static bool ready = true;
         static string mission_playthrough_hash;
         static string last_fps = "50";
-
+        
         // Strinbuilder for fun.
         static StringBuilder datastring = new StringBuilder();
+        static StringBuilder kills = new StringBuilder();
 
         static NamedPipeClientStream pipe = new NamedPipeClientStream(".", "SIMSRV1", PipeDirection.Out, PipeOptions.WriteThrough);
         static StreamWriter ss = new StreamWriter(pipe);
@@ -64,6 +65,15 @@ namespace SIMExt
                 
                 // Append the final closing bracket for the json.
                 datastring.Append(json_data_footer);
+
+                // Append the kills json, if it exists.
+                if (kills.Length > 1)
+                {
+                    datastring.Append(",\"kills\":[" + kills.ToString() + "]");
+                }
+
+                // Clear out the kills info.
+                kills.Clear();
                 
                 // Send the info to the daemon.
                 if (!SendToDaemon("update", datastring.ToString()))
@@ -76,6 +86,15 @@ namespace SIMExt
                 datastring.Clear();
 
                 ready = true;
+            }
+            else if (function[0] == 'K') // Started a new mission.
+            {
+                if (kills.Length <= 1)
+                {
+                    kills.Append(',');
+                }
+
+                kills.Append(function.Substring(1));
             }
             else if (function[0] == 'B') // Started a new mission.
             {
@@ -170,8 +189,6 @@ namespace SIMExt
 
                 return hash_str.ToString();
             }
-
-            return null;
         }
 
         private static void DebugToFile(string dt)
