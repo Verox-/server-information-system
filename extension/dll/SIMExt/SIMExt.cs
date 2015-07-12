@@ -89,7 +89,7 @@ namespace SIMExt
             }
             else if (function[0] == 'K') // Started a new mission.
             {
-                if (kills.Length <= 1)
+                if (kills.Length > 1)
                 {
                     kills.Append(',');
                 }
