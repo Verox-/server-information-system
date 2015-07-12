@@ -10,14 +10,14 @@ source.onmessage = function(event) {
     }
 
    var units = JSON.parse(event.data);
-   UpdateMapMarkers(units);
+   UpdateUnitMarkers(units);
 
 
 }
 
 
 
-function UpdateMapMarkers(units)
+function UpdateUnitMarkers(units)
 {
     for (var key in units)
     {

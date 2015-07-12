@@ -83,6 +83,9 @@ function InitMap(island) {
             mapInfo['latOriginOffset'] = json.originOffset[0];
             mapInfo['lngOriginOffset'] = json.originOffset[1];
             console.log("INFO: The map successfully initialized.");
+
+            UpdateUnitMarkers(JSON.parse(frames[initialFramePointer]).units);
+            $("#replaySeeker").val(initialFramePointer);
         })
         .fail(function() {
             console.log("FAILURE.");

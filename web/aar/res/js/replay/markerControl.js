@@ -4,7 +4,7 @@ var markers = new Array();
 /**
  * Give me JSON formatted unit data.
  */
-function UpdateMapMarkers(units)
+function UpdateUnitMarkers(units)
 {
     var markerRemoveQueue = Object.keys(markers);
 

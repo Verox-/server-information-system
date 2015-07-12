@@ -54,12 +54,22 @@ function RunClock() {
     $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100));
     //UpdateInterface();
 
+    $("#staticLinkButton").click(function() {
+        $("#staticLinkContainer").toggle(400);
+        $("#staticLinkText").html("http://aar.unitedoperations.net/replay/" + replayIdentifierHash + "/frame/" + framePointer);
+    });
+
+    $("#staticLinkContainerClose").click(function() {
+        $("#staticLinkContainer").hide(400);
+    });
+
+
     function UpdateInterface() {
         if ($.isEmptyObject(frames[framePointer])) {
             return;
         }
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
-        UpdateMapMarkers(JSON.parse(frames[framePointer]).units);
+        UpdateUnitMarkers(JSON.parse(frames[framePointer]).units);
     }
 
     $("#playPauseButton").click(function() {
@@ -104,6 +114,7 @@ function RunClock() {
     // });
     var lastPlayState = false;
     $("#replaySeeker").mousedown(function() {
+        $("#staticLinkContainer").hide();
         lastPlayState = (replayClock != null ? true : false);
         ToggleClock(false);
         console.log(lastPlayState);
