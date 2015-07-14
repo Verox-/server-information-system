@@ -112,7 +112,8 @@ function jxgcompress($filename)
             }
 
             .controlsContainer #replaySeeker {
-                margin: auto;
+                margin: 0px 5px;
+                flex-grow:1;
             }
 
             .controlsContainer #playPauseButton {

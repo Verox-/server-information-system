@@ -69,7 +69,15 @@ function RunClock() {
             return;
         }
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
-        UpdateUnitMarkers(JSON.parse(frames[framePointer]).units);
+
+        var frameJson = JSON.parse(frames[framePointer]);
+        UpdateUnitMarkers(frameJson.units);
+
+        if (frameJson.kills != undefined)
+        {
+            HandleKillEvents(frameJson.kills);
+        }
+
     }
 
     $("#playPauseButton").click(function() {

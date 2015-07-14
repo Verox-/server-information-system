@@ -1,6 +1,6 @@
 
 var markers = new Array();
-
+var kills = new Array();
 /**
  * Give me JSON formatted unit data.
  */
@@ -92,6 +92,63 @@ function UpdateUnitMarkers(units)
         console.log("remove");
     }
     //console.log(units);
+}
+
+/**
+ * Give me JSON formatted unit data.
+ */
+function HandleKillEvents(killEvent)
+{
+    for (var key in killEvent)
+    {
+        // Calculate the victim's position.
+        killEvent[key].latlng = GameCoordToLatLng(killEvent[key].victim.pos);
+
+        var svgURL = "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" x="0px" y="0px" width="12px" height="12px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" xml:space="preserve"><line fill="none" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" x1="3.171" y1="8.828" x2="8.828" y2="3.171"/><line fill="none" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" x1="3.171" y1="3.171" x2="8.828" y2="8.828"/></svg>');
+        if (killEvent[key].killer.name != killEvent[key].victim.name)
+        {
+            var popupText = killEvent[key].killer.name + "(" + killEvent[key].killer.fac + ") killed "+ killEvent[key].victim.name+ "(" + killEvent[key].victim.fac + ")";
+        }
+        else
+        {
+            var popupText = killEvent[key].victim.name + "(" + killEvent[key].victim.fac + ") killed himself";
+        }
+
+
+        // Construct the marker.
+        var mySVGIcon = L.icon( {
+            iconUrl: svgURL,
+            iconSize: [12, 12],
+            shadowSize: [12, 10],
+            iconAnchor: [5, 5],
+            popupAnchor: [2, -4]
+        } );
+
+        // Add the marker to the map and bind the popup.
+        var tmp_killMarker = L.rotatedMarker( killEvent[key].latlng, { icon: mySVGIcon, angle:0} ).addTo(map);
+        var tmp_boundPopup = tmp_killMarker.bindPopup("<b>" + popupText + "</b>");
+
+        var tmp_linespos = [0,0];
+
+        if (killEvent[key].killer.name != killEvent[key].victim.name)
+        {
+            tmp_linespos = [GameCoordToLatLng(killEvent[key].victim.pos),GameCoordToLatLng(killEvent[key].killer.pos)];
+        }
+
+        var tmp_killPopupLine = L.polyline(tmp_linespos, {color: 'red'});
+
+        tmp_boundPopup.on('popupopen', function(e) {
+            tmp_killPopupLine.addTo(map);
+        });
+        tmp_boundPopup.on('popupclose', function(e) {
+            map.removeLayer(tmp_killPopupLine);
+        });
+
+        // Push the marker to the array.
+        kills.push(tmp_killMarker);
+
+        console.log("kill");
+    }
 }
 
 function GetSideColor(side, player)
