@@ -44,6 +44,7 @@
                 "pos": "[0000.00,0000.00,0000.00]", // Position XYZ
                 "fac": "CIV", // Faction
                 "dir": "000.00" // Direction 0-360.
+				"name": "Player" // Unit's name.
             }
         ],
         "kills": [
@@ -54,12 +55,14 @@
                     "uid": "0000000000000000000000000",
                     "pos": "[0000.00,0000.00,0000.00]",
                     "fac": "LOGIC"
+					"name": "Player"
                 },
                 "victim": {
                     "nid": "0:000",
                     "uid": "0000000000000000000000000",
                     "pos": "[0000.00,0000.00,0000.00]",
                     "fac": "LOGIC"
+					"name": "Player"
                 }
             }
         ]
