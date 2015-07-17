@@ -17,7 +17,7 @@ namespace SIMExt
 
         // Constant JSON structure.
         
-        const string json_data_header = "\"time\":{0},\"units\": [";
+        
         const string json_data_footer = "]";
 
         static bool ready = true;
@@ -26,6 +26,8 @@ namespace SIMExt
         
         // Strinbuilder for fun.
         static StringBuilder datastring = new StringBuilder();
+        static StringBuilder groups = new StringBuilder();
+        static StringBuilder units = new StringBuilder();
         static StringBuilder kills = new StringBuilder();
 
         static NamedPipeClientStream pipe = new NamedPipeClientStream(".", "SIMSRV1", PipeDirection.Out, PipeOptions.WriteThrough);
@@ -37,9 +39,22 @@ namespace SIMExt
 #if DEBUG
             DebugToFile(function);
 #endif
-
-            if (function[0] == 'S') // Started a unit report.
+            if (function[0] == 'U')
             {
+                units.Append('{');
+                units.Append(function.Substring(1));
+                units.Append("},");
+            }
+            else if (function[0] == 'G')
+            {
+                groups.Append('{');
+                groups.Append(function.Substring(1));
+                groups.Append("},");
+            }
+            else if (function[0] == 'S') // Started a unit report.
+            {
+                const string json_data_header = "\"time\":";
+
                 if (!pipe.IsConnected) { HandleBrokenConnection(); } // Check the pipe is still connected, if it isn't try to reconnect.
 
                 if (!ready)
@@ -47,7 +62,8 @@ namespace SIMExt
                     datastring.Clear();
                 }
 
-                datastring.AppendFormat(json_data_header, function.Substring(1));
+                // Append the time field.
+                datastring.Append(json_data_header + function.Substring(1));
 
                 ready = false;
             }
@@ -58,23 +74,30 @@ namespace SIMExt
                     return;
 
                 // Get rid of the last comma to make it valid json.
-                if (datastring[datastring.Length - 1] == ',')
+                if (datastring[datastring.Length - 1] != ',')
                 {
-                    datastring.Remove(datastring.Length - 1, 1);
+                    datastring.Append("," + FinalizeJSONArrayOutput(ref units, "units"));
                 }
-                
-                // Append the final closing bracket for the json.
-                datastring.Append(json_data_footer);
+
+#if DEBUG
+                DebugToFile("OE: " + datastring.ToString() + "\n");
+#endif
+                // Append the groups json, if it exists.
+                if (groups.Length > 1)
+                {
+                    datastring.Append("," + FinalizeJSONArrayOutput(ref groups, "groups"));
+                }
 
                 // Append the kills json, if it exists.
                 if (kills.Length > 1)
                 {
-                    datastring.Append(",\"kills\":[" + kills.ToString() + "]");
+                    datastring.Append("," + FinalizeJSONArrayOutput(ref kills, "kills"));
                 }
 
-                // Clear out the kills info.
-                kills.Clear();
-                
+#if DEBUG
+                DebugToFile("OP: " + datastring.ToString() + "\n");
+#endif
+
                 // Send the info to the daemon.
                 if (!SendToDaemon("update", datastring.ToString()))
                 {
@@ -122,12 +145,38 @@ namespace SIMExt
             }
             else
             {
-                datastring.Append('{');
-                datastring.Append(function);
-                datastring.Append("},");
+
             }
 
             outputSize = output.Length;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data">StringBuilder containing {object},{object},{object},</param>
+        /// <param name="key">Key for the json array.</param>
+        /// <returns>String of formatted JSON data. "key": [{object},{object},{object}]</returns>
+        private static string FinalizeJSONArrayOutput(ref StringBuilder data, string key)
+        {
+
+            const string jsonArrayFormat = "\"{0}\": [{1}]";
+
+            // Stringify the stringbuilder.
+            string processedData = data.ToString();
+
+            // Trim any commas to make it valid json.
+            processedData = processedData.Trim(',');
+
+            // Clear out the stringbuilder, it's data has been processed.
+            data.Clear();
+            
+#if DEBUG
+            DebugToFile("DS:" + processedData + "\n");
+#endif
+
+            // Return the json array.
+            return string.Format(jsonArrayFormat, key, processedData);
         }
 
         // Put this in it's own thread. Should improve speedyness. Or use FlushAsync.
