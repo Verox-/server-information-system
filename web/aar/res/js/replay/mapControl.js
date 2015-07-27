@@ -73,7 +73,7 @@ function InitMap(island) {
             function onMapClick(e) {
                 popup
                     .setLatLng(e.latlng)
-                    .setContent(e.latlng.toString())
+                    .setContent(LatLngToGrid(e.latlng))
                     .openOn(map);
             }
 

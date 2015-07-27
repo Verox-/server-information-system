@@ -39,7 +39,7 @@ InitUIControl(frames.length);
 
 function InitUIControl(frames) {
     $("#replaySeeker").attr("max", frames);
-    window.alert("This tool is in closed alpha; it may work, not work correctly, or not work at all.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n   https://github.com/Verox-/server-information-system\nor, if you do not have access, to Verox either in person or on the forum thread.\n\n");
+    window.alert("This tool is in Beta.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n  https://github.com/Verox-/aar \nor to Verox either in person or on the forum thread.\n\n");
     $(".controlsContainer").show(300);
 }
 
@@ -140,26 +140,26 @@ function RunClock() {
         ToggleClock(lastPlayState);
         UpdateInterface();
     });
+}
 
-    function TimeStringify(sec, totalsec) {
-        function pad(n, width, z) {
-            z = z || '0';
-            n = n + '';
-            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-        }
-
-        var hours = Math.floor(sec / 3600);
-        sec = sec - (hours * 3600); //why didn't mod work...
-        var minutes = Math.floor(sec / 60);
-        var seconds = Math.floor(sec % 60);
-
-        var result;
-        var result = (totalsec >= 3600 ? pad(hours, 2) + "h " : "");
-        result = result + (minutes != 0 ? pad(minutes, 2) + "m " : "00m ");
-        result = result + (seconds != 0 ? pad(seconds, 2) + "s" : "00s");
-
-        return result;
+function TimeStringify(sec, totalsec) {
+    function pad(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     }
+
+    var hours = Math.floor(sec / 3600);
+    sec = sec - (hours * 3600); //why didn't mod work...
+    var minutes = Math.floor(sec / 60);
+    var seconds = Math.floor(sec % 60);
+
+    var result;
+    var result = (totalsec >= 3600 ? pad(hours, 2) + "h " : "");
+    result = result + (minutes != 0 ? pad(minutes, 2) + "m " : "00m ");
+    result = result + (seconds != 0 ? pad(seconds, 2) + "s" : "00s");
+
+    return result;
 }
 
 RunClock();

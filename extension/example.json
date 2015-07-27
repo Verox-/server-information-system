@@ -43,10 +43,18 @@
                 "uid": "00000000000000000", // Unique ID (SteamID64 if player, blank if AI)
                 "pos": "[0000.00,0000.00,0000.00]", // Position XYZ
                 "fac": "CIV", // Faction
-                "dir": "000.00" // Direction 0-360.
-				"name": "Player" // Unit's name.
+                "dir": "000.00", // Direction 0-360.
+                "name": "Player", // Unit's name.
+				"group": "0:000"
             }
         ],
+		"groups": [
+			{
+				"nid": "0:000",
+				"leader": "0:000",
+				"identifer": "Alpha HQ",
+			}
+		],
         "kills": [
             {
                 "time": 0.000,
@@ -55,14 +63,14 @@
                     "uid": "0000000000000000000000000",
                     "pos": "[0000.00,0000.00,0000.00]",
                     "fac": "LOGIC"
-					"name": "Player"
+                    "name": "Player"
                 },
                 "victim": {
                     "nid": "0:000",
                     "uid": "0000000000000000000000000",
                     "pos": "[0000.00,0000.00,0000.00]",
                     "fac": "LOGIC"
-					"name": "Player"
+                    "name": "Player"
                 }
             }
         ]
