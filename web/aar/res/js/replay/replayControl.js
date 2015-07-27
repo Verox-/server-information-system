@@ -39,7 +39,7 @@ InitUIControl(frames.length);
 
 function InitUIControl(frames) {
     $("#replaySeeker").attr("max", frames);
-    window.alert("This tool is in closed alpha; it may work, not work correctly, or not work at all.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n   https://github.com/Verox-/server-information-system\nor, if you do not have access, to Verox either in person or on the forum thread.\n\n");
+    window.alert("This tool is in Beta.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n  https://github.com/Verox-/aar \nor to Verox either in person or on the forum thread.\n\n");
     $(".controlsContainer").show(300);
 }
 
@@ -54,12 +54,30 @@ function RunClock() {
     $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100));
     //UpdateInterface();
 
+    $("#staticLinkButton").click(function() {
+        $("#staticLinkContainer").toggle(400);
+        $("#staticLinkText").html("http://aar.unitedoperations.net/replay/" + replayIdentifierHash + "/frame/" + framePointer);
+    });
+
+    $("#staticLinkContainerClose").click(function() {
+        $("#staticLinkContainer").hide(400);
+    });
+
+
     function UpdateInterface() {
         if ($.isEmptyObject(frames[framePointer])) {
             return;
         }
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
-        UpdateMapMarkers(JSON.parse(frames[framePointer]).units);
+
+        var frameJson = JSON.parse(frames[framePointer]);
+        UpdateUnitMarkers(frameJson.units);
+
+        if (frameJson.kills != undefined)
+        {
+            HandleKillEvents(frameJson.kills);
+        }
+
     }
 
     $("#playPauseButton").click(function() {
@@ -104,6 +122,7 @@ function RunClock() {
     // });
     var lastPlayState = false;
     $("#replaySeeker").mousedown(function() {
+        $("#staticLinkContainer").hide();
         lastPlayState = (replayClock != null ? true : false);
         ToggleClock(false);
         console.log(lastPlayState);
@@ -121,26 +140,26 @@ function RunClock() {
         ToggleClock(lastPlayState);
         UpdateInterface();
     });
+}
 
-    function TimeStringify(sec, totalsec) {
-        function pad(n, width, z) {
-            z = z || '0';
-            n = n + '';
-            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-        }
-
-        var hours = Math.floor(sec / 3600);
-        sec = sec - (hours * 3600); //why didn't mod work...
-        var minutes = Math.floor(sec / 60);
-        var seconds = Math.floor(sec % 60);
-
-        var result;
-        var result = (totalsec >= 3600 ? pad(hours, 2) + "h " : "");
-        result = result + (minutes != 0 ? pad(minutes, 2) + "m " : "00m ");
-        result = result + (seconds != 0 ? pad(seconds, 2) + "s" : "00s");
-
-        return result;
+function TimeStringify(sec, totalsec) {
+    function pad(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     }
+
+    var hours = Math.floor(sec / 3600);
+    sec = sec - (hours * 3600); //why didn't mod work...
+    var minutes = Math.floor(sec / 60);
+    var seconds = Math.floor(sec % 60);
+
+    var result;
+    var result = (totalsec >= 3600 ? pad(hours, 2) + "h " : "");
+    result = result + (minutes != 0 ? pad(minutes, 2) + "m " : "00m ");
+    result = result + (seconds != 0 ? pad(seconds, 2) + "s" : "00s");
+
+    return result;
 }
 
 RunClock();
