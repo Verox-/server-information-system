@@ -3,15 +3,22 @@ using System.IO;
 using System.IO.Pipes;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 using System.Runtime.InteropServices;
 using System.Net.Http;
+using System.Xml.Serialization;
 
 namespace SIMDaemon
 {
+    public struct DaemonConfiguration
+    {
+        public String ApiEndpoint;
+        public String ServerName;
+    }
     class Program
     {
         #region NaitiveImports
@@ -25,14 +32,26 @@ namespace SIMDaemon
         const int SW_SHOW = 5;
         #endregion
 
-        const string unique_server_name = "SRV1";
-        const string unique_pipe_name = "SIM" + unique_server_name;
-
+        private static string _uniquePipeName;
+        private static string UniquePipeName
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_uniquePipeName))
+                    _uniquePipeName = "SIM" + Config.ServerName;
+                return _uniquePipeName;
+            }
+        }
+        public static String ConfigurationPath
+        {
+            get { return "config.xml"; }
+        }
         static NamedPipeServerStream pipeServer;
         static HttpClient inet = new HttpClient();
-
+        public static DaemonConfiguration Config;
         static void Main(string[] args)
         {
+            Config = LoadConfiguration();
             Console.WriteLine("[INFO/] Server Information Manager: Server Monitor Daemon");
             Console.WriteLine("[INFO/] Currently monitoring with: PIPE/simext."); // MEMORY/data-log, FILE/net-rpt
             Console.WriteLine("[INFO/] Alpha v0.0 - Created by Verox for UnitedOperations.net");
@@ -48,7 +67,7 @@ namespace SIMDaemon
                 Console.Write("[INFO/PIPE/simext] Initializing new pipe...");
                 try
                 {
-                    pipeServer = new NamedPipeServerStream(unique_pipe_name, PipeDirection.InOut);
+                    pipeServer = new NamedPipeServerStream(UniquePipeName, PipeDirection.InOut);
                     Console.WriteLine(" success.");
                 } 
                 catch (Exception ex) // We're rethrowing this.
@@ -97,6 +116,29 @@ namespace SIMDaemon
                 #endif
 
                 Console.Write("[WARN/PIPE/simext] Pipe disconnected... "); // ACH, AIT ALL GON TITS UP, ERRR!               
+            }
+        }
+
+        private static DaemonConfiguration LoadConfiguration()
+        {
+            var serializer = new XmlSerializer(typeof(DaemonConfiguration));
+            if (!File.Exists(ConfigurationPath))
+            {
+                Console.WriteLine("[WARN] No configuration found, a default generated.");
+                var config = new DaemonConfiguration()
+                {
+                    ApiEndpoint = "http://aar.unitedoperations.net/api/v1/data.php",
+                    ServerName = "SRV1"
+                };
+                using (var stream = File.OpenWrite(ConfigurationPath))
+                {
+                    serializer.Serialize(stream, config);
+                }
+                return config;
+            }
+            using (var stream = File.OpenRead(ConfigurationPath))
+            {
+                return (DaemonConfiguration) serializer.Deserialize(stream);
             }
         }
 
