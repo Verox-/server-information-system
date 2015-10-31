@@ -4,6 +4,9 @@ if (empty($_GET['id']))
     die("Pass ID. Replay is embedded for now.<br />js_decompres_test.php?id=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 }
 
+// Load the settings.
+require_once __DIR__ . '/settings.php';
+
 function jxgcompress($filename)
 {
     if (file_exists($filename)) {
@@ -31,6 +34,7 @@ function jxgcompress($filename)
         <script src="./res/js/lib/RotatedMarker/L.RotatedMarker.js"></script>  <!--https://github.com/bbecquet/Leaflet.PolylineDecorator/blob/leaflet-0.7.2/src/L.RotatedMarker.js-->
         <script type="text/javascript">
             var replay_base64 = "<?php try {echo jxgcompress("./replays/{$_GET['id']}.replay");} catch (Exception $ex) {echo "ERROR";} ?>";
+            var map_base_url = "<?=SIMRegistry::$settings['base_url']?>/maps/";
         </script>
 
         <script type="text/javascript">
