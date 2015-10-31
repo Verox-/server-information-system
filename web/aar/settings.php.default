@@ -42,7 +42,7 @@ class SIMRegistry
         self::$init = true;
     }
 
-    public function GetSettings()
+    public static function GetSettings()
     {
         return self::$settings;
     }
