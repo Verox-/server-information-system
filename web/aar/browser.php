@@ -3,7 +3,7 @@
 define('IN_SIM', true);
 
 // Load the settings.
-require_once __DIR__ . 'settings.php';
+require_once __DIR__ . '/settings.php';
 
 // Load the database driver.
 require_once SIM_ROOT_DIR . 'modules/db.php';
