@@ -33,7 +33,7 @@ class DbDriver
     function __construct()
     {
         // Check if we already exist.
-        if ($self != null) {
+        if (self::$self != null) {
             return $this->self;
         }
 
