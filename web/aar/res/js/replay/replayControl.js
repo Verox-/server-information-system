@@ -1,19 +1,66 @@
-$("#mapContainer").append("<span class='consoleMessage'>Decompressing replay file...</span>");
+// Get the download size and confirm the replay exists.
+$.ajax({
+    url: base_url + "/replays/" + replayIdentifierHash + ".replay",
+    method: 'HEAD',
+    async: false,
+    success: function(data, status, request) {
+        download_size = request.getResponseHeader('Content-Length');
+        $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file (" + (download_size / 1000000).toFixed(2) + "MB)...</span>");
+    },
+    error:  function(request, status, error) {
+        $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file...</span>");
+        $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
+        $("#mapContainer").append("<br /><span class='consoleErrorMessage'>An error occured attempting to retrieve replay metadata: " + request.status + " " + error + "</span><br />");
+    }
+});
+
+
+var replay = "";
+
 if (replay_base64 == "ERROR") {
     $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>No replay with that hash exists.</span><br />");
 }
-var replay = JXG.decompress(replay_base64);
+var replayFilePointer = 0;
+var frames = [];
+var parBuf = false;
+
+while (replayFilePointer != -1) {
+    chunk = DownloadReplayChunk(replayFilePointer)
+    console.log("chunkptr:" + chunk[0]);
+    if (chunk[0] == -1)
+    {
+        break;
+    }
+
+    var tframes = chunk[1].split("\n");
+    if (parBuf)
+    {
+        frames[frames.length - 1] = frames[frames.length - 1] + tframes[0];
+        tframes = tframes.splice(0, 1);
+    }
+
+    if (tframes[tframes.length - 1].indexOf("\n") != -1)
+    {
+        parBuf = true;
+    }
+
+    frames = frames.concat(tframes);
+    console.log("frames: " + frames.length);
+    //replay += chunk[1];
+    replayFilePointer = chunk[0];
+}
+
 $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
 
 
 $("#mapContainer").append("<span class='consoleMessage'>Parsing replay frames...</span>");
-var frames = replay.split("\n");
+//var frames = replay.split("\n");
 
 if (frames.length < 2) {
     $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Invalid number of frames (" + frames.length + ").</span><br />");
-    $("#mapContainer").append("<br /><span class='consoleMessage'>If this is an older replay (<29/06/15) then it may be using the old format. You can try to fix it by clicking this link(soon), waiting a few seconds then retrying the aar.</span><br />");
+    $("#mapContainer").append("<br /><span class='consoleMessage'>If this is an older replay (<29/06/15) then it may be using the old format. Please ask your administrator to manually convert the replay.</span><br />");
     throw new Error("R012: INVALID FRAMES.");
 }
 $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
@@ -41,6 +88,26 @@ function InitUIControl(frames) {
     $("#replaySeeker").attr("max", frames);
     window.alert("This tool is in Beta.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n  https://github.com/Verox-/aar \nor to Verox either in person or on the forum thread.\n\n");
     $(".controlsContainer").show(300);
+}
+
+function DownloadReplayChunk(seek)
+{
+    var chunk;
+    var seeker;
+
+    $.ajax({
+        url: base_url + "/api/v1/DownloadReplay.php?id=" + replayIdentifierHash + "&seek=" + seek,
+        method: 'GET',
+        async: false,
+    })
+    .done(function( data ) {
+        //$("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
+        cdt = data.split(":", 2)
+        seeker = cdt[0];
+        chunk = JXG.decompress(cdt[1]);
+    });
+
+    return [seeker, chunk];
 }
 
 function RunClock() {

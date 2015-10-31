@@ -1,21 +1,11 @@
 <?php
-if (empty($_GET['id']))
-{
-    die("Pass ID. Replay is embedded for now.<br />js_decompres_test.php?id=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-}
+// if (empty($_GET['id']))
+// {
+//     die("Pass ID! replay.php?id=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+// }
 
 // Load the settings.
 require_once __DIR__ . '/settings.php';
-
-function jxgcompress($filename)
-{
-    if (file_exists($filename)) {
-        /*$base64 =*/ return base64_encode(file_get_contents($filename));
-        //echo "<script>var jxgcompressed = \"$base64\";</script>\n";
-    } else {
-        throw new Exception("$filename not found");
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -33,11 +23,8 @@ function jxgcompress($filename)
         <script src="./res/js/lib/jsxcompressor/jsxcompressor.min.js"></script> <!--http://jsxgraph.uni-bayreuth.de/wp/2009/09/29/jsxcompressor-zlib-compressed-javascript-code/-->
         <script src="./res/js/lib/RotatedMarker/L.RotatedMarker.js"></script>  <!--https://github.com/bbecquet/Leaflet.PolylineDecorator/blob/leaflet-0.7.2/src/L.RotatedMarker.js-->
         <script type="text/javascript">
-            var replay_base64 = "<?php try {echo jxgcompress("./replays/{$_GET['id']}.replay");} catch (Exception $ex) {echo "ERROR";} ?>";
-            var map_base_url = "<?=SIMRegistry::$settings['base_url']?>/maps/";
-        </script>
-
-        <script type="text/javascript">
+            var replay_base64 = "";
+            var base_url = "<?=SIMRegistry::$settings['base_url']?>";
             var initialFramePointer = <?php echo (isset($_GET['frame']) && is_numeric($_GET['frame']) ? $_GET['frame'] : 0)?>;
             var replayIdentifierHash = "<?php echo $_GET['id']?>";
         </script>
