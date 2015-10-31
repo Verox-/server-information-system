@@ -19,7 +19,7 @@ class SIMRegistry
 
         self::$settings['log_dir'] = "logs/";
 
-        self::$settings['using_ips'] = true;
+        self::$settings['using_ips'] = false;
         self::$settings['ips']['db'] = "ipboard";
 
         // The following defines the database and field names for information.
@@ -48,13 +48,13 @@ class SIMRegistry
 /// ---------- DO NOT CHANGE BELOW THIS LINE ---------- ///
 
 define ('SIM_ROOT_DIR', __DIR__ . "/");
-define ('SIM_BASE_URL', $settings['base_url']);
-
-define ('SIM_DIR_IMG', SIM_BASE_URL . "res/img/");
-define ('SIM_DIR_CSS', SIM_BASE_URL . "res/css/");
-define ('SIM_DIR_JS', SIM_BASE_URL . "res/js/");
 
 if (SIMRegistry::$init == false) {
     new SIMRegistry();
 }
+
+define ('SIM_BASE_URL', SIMRegistry::$settings['base_url']);
+define ('SIM_DIR_IMG', SIM_BASE_URL . "res/img/");
+define ('SIM_DIR_CSS', SIM_BASE_URL . "res/css/");
+define ('SIM_DIR_JS', SIM_BASE_URL . "res/js/");
  ?>
