@@ -8,7 +8,13 @@ class SIMRegistry
 
     public function __construct()
     {
-        self::$settings['base_url'] = "http://aar.website.net/";
+        self::$settings['community_name'] = "";
+        self::$settings['community_url'] = "http://www.example.org/";
+        self::$settings['favicon'] = "./res/img/favicon.ico";
+
+        self::$settings['base_url'] = "http://www.example.org/aar/";
+        self::$settings['replay_url'] = "replay.php?id=";
+
         self::$settings['db_host'] = "localhost";
         self::$settings['db_user'] = "";
         self::$settings['db_pass'] = "";

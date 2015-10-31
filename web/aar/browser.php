@@ -1,4 +1,6 @@
 <?php
+$teststart = microtime(true);
+
 // Define the master variable.
 define('IN_SIM', true);
 
@@ -14,6 +16,11 @@ $db = new DbDriver();
 // Get all the missions. (Paginiation is for the... people who have time to implement it.)
 $result = $db->query("SELECT * FROM aar_replays ORDER by id DESC");
 
+if ($result->num_rows == 0)
+{
+	$missions = [0];
+}
+
 /* fetch object array */
 while ($row = $result->fetch_assoc()) {
 	$missions[] = $row;
@@ -21,28 +28,18 @@ while ($row = $result->fetch_assoc()) {
 
 /* free result set */
 $result->close();
-
-/* close connection */
-$mysqli->close();
-?>
-
-<?php
-	// Script generation time
-	$teststart = microtime(true);
-
-	$generationtime = microtime(true) - $teststart;
 ?>
 <html>
 <head>
 	<title>Rifling Matters - Mission Replays</title>
 	<link rel='stylesheet' type='text/css' href='./res/css/main.css'>
 	<link rel='stylesheet' type='text/css' href='./res/css/missions.css'>
-	<!-- <link rel="shortcut icon" href="http://forums.unitedoperations.net/favicon.ico">  CHANGE ME! -->
+	<link rel="shortcut icon" href="<?=SIMRegistry::$settings['favicon']?>">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
-	<meta name="keywords" content="Rifling Matters, RFM">
+	<meta name="keywords" content="<?=SIMRegistry::$settings['community_name']?>, ARMA Replay">
     <meta charset="utf-8">
-	<meta name="description" content="Rifling Matters' Server Tracking System.">
+	<meta name="description" content="<?=SIMRegistry::$settings['community_name']?> Server Tracking System.">
 	<meta name="author" content="Verox">
 </head>
 <body>
@@ -54,19 +51,26 @@ $mysqli->close();
 			<!---<span id='server_header_name'>## SERVER NAME ##</span> -->
 		</div>
 		<div id='error_panel'>
-			<? //echo <div class='errorBox'>This section is still under construction and may not be fully functional.</div> ?>
+			<!-- <div class='errorBox'>This section is still under construction and may not be fully functional.</div> -->
+			<?php if ($missions[0] == 0) { echo "<div class='warnBox'>The database is empty. If this is a new install this is expected, the database will populate when replays are recorded.</div>"; } ?>
 		</div>
 		<div class='navbox'>
-		<a href='http://riflingmatters.com/'><h3 class='navbox_title'>Rifling Matters</h3></a><h3 class='navbox_content'> « Missions History</h3>
+		<a href='<?=SIMRegistry::$settings['community_url']?>'><h3 class='navbox_title'><?=SIMRegistry::$settings['community_name']?></h3></a><h3 class='navbox_content'> « Missions History</h3>
 		</div>
 		<div id='past_missions_list' class='outerBox'>
 			<h3>Recent Mission History</h3>
 			<div class='contentBox'>
 				<table class='missionTable'>
-					<tr style='background: rgb(79, 77, 72);'><th>Mission Name</th><th style='text-align:center'>Replay</th><th style='text-align:center'>Start</th><th style='text-align:center'>End</th><tr>
-					<?
-						if (count($missions) == 0) {
-							echo "<tr><td colspan='4' style='text-align: center;'><span style='color: red;'> ERROR GETTING RECENT MISSIONS! </span></td></tr>";
+					<thead>
+						<tr><th>Mission Name</th><th style='text-align:center'>Replay</th><th style='text-align:center'>Start</th><th style='text-align:center'>End</th><tr>
+					</thead>
+					<?php
+						if ($missions[0] == 0)
+						{
+							echo "<tr><td colspan='4' style='text-align: center;'><span style='color: red;'> </span></td></tr>";
+						}
+						else if (count($missions) == 0) {
+							echo "<tr><td colspan='4' style='text-align: center;'><span style='color: red;'> ERROR! </span></td></tr>";
 						} else {
 							foreach ($missions as $mission) {
 								// Temporary fix for map,
@@ -94,7 +98,7 @@ $mysqli->close();
 			</div>
 		</div>
 			<footer>
-	- Server Information Manager for Rifling Matters - <br />
-	Created by <a href='http://www.unitedoperations.net/' target='_blank'style='text-decoration: none; color: rgb(195, 121, 120);'>Verox@UO.net</a> for Rifling Matters - Visit us at <a href='http://riflingmatters.com/' target='_blank'style='text-decoration: none; color: rgb(195, 121, 120);'>riflingmatters.com</a>!<br />
-	This page was generated in <? echo $generationtime; ?> seconds.
+	- Server Information Manager - <br />
+	Created by <a href='http://www.unitedoperations.net/' target='_blank'style='text-decoration: none; color: rgb(195, 121, 120);'>Verox@UO.net</a> for <?=SIMRegistry::$settings['community_name']?> - Visit us at <a href='<?=SIMRegistry::$settings['community_url']?>' target='_blank'style='text-decoration: none; color: rgb(195, 121, 120);'><?=SIMRegistry::$settings['community_url']?></a>!<br />
+	This page was generated in <?php echo (microtime(true) - $teststart);?> seconds.
 	</footer>
