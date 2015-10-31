@@ -28,6 +28,9 @@ while ($row = $result->fetch_assoc()) {
 
 /* free result set */
 $result->close();
+
+// Lazy settings
+$settings = SIMRegistry::GetSettings();
 ?>
 <html>
 <head>
@@ -74,16 +77,20 @@ $result->close();
 						} else {
 							foreach ($missions as $mission) {
 								// Temporary fix for map,
-								if ($mission['map'] == "") { $mission['map'] = "<i>NULL</i>"; }
-								try {
-									$msn_start_formatted = "<span style='font-size: 11px;'>" . $mission['msn_start'] . "</span><br />" . $mission['msn_start'] . "";
-								} catch (Exception $ex) { $msn_start_formatted = "ERROR"; }
+								if ($mission['island'] == "") { $mission['island'] = "<i>Unknown</i>"; }
 
-								try {
-									$msn_end_formatted = "<span style='font-size: 11px;'>" . $mission['msn_end'] . "</span><br />" . $mission['msn_end'] . "Z"; //->format('Y/m/d') ->format('H:i')
-								} catch (Exception $ex) { $msn_start_formatted = "ERROR"; }
+								// Format date into a compressed format, use if more data needs to be displayed.
+								// try {
+								// 	$mstart = explode(" ", $mission['start']);
+								// 	$mission['start'] = "<span style='font-size: 11px;'>" . $mstart[0] . "</span><br />" . $mstart[1] . "";
+								// } catch (Exception $ex) { $msn_start_formatted = "ERROR"; }
+								//
+								// try {
+								// 	$mend = explode(" ", $mission['end']);
+								// 	$mission['end'] = "<span style='font-size: 11px;'>" . $mend[0] . "</span><br />" . $mend[1] . "Z"; //->format('Y/m/d') ->format('H:i')
+								// } catch (Exception $ex) { $msn_start_formatted = "ERROR"; }
 
-								echo "<tr><td>{$mission['filename']}<br /><span class='extra_missiontext'>Island: {$mission['island']}</span></td><td style='text-align:center'><a href=\"http://aar.unitedoperations.net/replay/{$mission['hash']}\"><span class=\"playBtn\"><i class=\"fa fa-play-circle\"></i> Play</span></a></td><td style='text-align:center'>{$mission['start']}Z</td><td style='text-align:center'>{$mission['end']}Z</td></tr>";
+								echo "<tr><td>{$mission['filename']}<br /><span class='extra_missiontext'>Island: {$mission['island']}</span></td><td style='text-align:center'><a href=\"{$settings['base_url']}{$settings['replay_url']}{$mission['hash']}\"><span class=\"playBtn\"><i class=\"fa fa-play-circle\"></i> Play</span></a></td><td style='text-align:center'>{$mission['start']}Z</td><td style='text-align:center'>{$mission['end']}Z</td></tr>";
 							}
 						}
 					?>
