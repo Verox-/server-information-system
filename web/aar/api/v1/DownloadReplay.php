@@ -6,20 +6,34 @@ if (!isset($_GET['id']))
     die ("No replay file specified.");
 }
 
+$filename = "/var/www/verox.me/public_html/aar/replays/{$_GET['id']}.replay";
+
 // Check if the file exists here.
+if (!file_exists($filename))
+{
+    die("ERROR");
+}
 
 // get contents of a gz-file into a string
-$filename = "/var/www/verox.me/public_html/aar/replays/{$_GET['id']}.replay";
 $zd = gzopen($filename, "r");
 
 if (isset($_GET['seek']) && $_GET['seek'] != 0)
 {
     if (gzseek ($zd , $_GET['seek']) == -1) { die ("ERROR"); }
 }
+$contents = "";
+$cLen = 0;
+$mFsize = getMaxFileSize($filename);
+while ($cLen < 10000000 && gztell($zd) < $mFsize)
+{
+    $contents .= stream_get_line($zd, 1000000, "\n") . "\n";
+    $cLen = strlen($contents);
+}
 
-$contents = gzread($zd, 10000000);
+//gzread($zd, 997606);
 $seeker = gztell ($zd);
-if (strlen($contents) == 0)
+
+if (gztell ($zd) >= $mFsize)
 {
     $seeker = -1;
 }
