@@ -24,34 +24,33 @@ if (replay_base64 == "ERROR") {
 var replayFilePointer = 0;
 var frames = [];
 var parBuf = false;
-
+var finalResult;
 while (replayFilePointer != -1) {
     chunk = DownloadReplayChunk(replayFilePointer)
     console.log("chunkptr:" + chunk[0]);
-    if (chunk[0] == -1)
+
+    if (chunk[0] < 0)
     {
+        finalResult = chunk;
         break;
     }
 
-    var tframes = chunk[1].split("\n");
-    if (parBuf)
-    {
-        frames[frames.length - 1] = frames[frames.length - 1] + tframes[0];
-        tframes = tframes.splice(0, 1);
-    }
-
-    if (tframes[tframes.length - 1].indexOf("\n") != -1)
-    {
-        parBuf = true;
-    }
-
-    frames = frames.concat(tframes);
+    frames = frames.concat(chunk[1].split("\n"));
     console.log("frames: " + frames.length);
     //replay += chunk[1];
     replayFilePointer = chunk[0];
 }
 
-$("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
+if (finalResult[0] == -1)
+{
+    $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
+}
+else if (finalResult[0] == -2)
+{
+    $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
+    $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Server reported an unknown error.</span><br />");
+    throw new Error("R014: FATAL ERROR IN REPLAY.");
+}
 
 
 $("#mapContainer").append("<span class='consoleMessage'>Parsing replay frames...</span>");
@@ -105,6 +104,9 @@ function DownloadReplayChunk(seek)
         cdt = data.split(":", 2)
         seeker = cdt[0];
         chunk = JXG.decompress(cdt[1]);
+    })
+    .fail(function() {
+        seeker = -2;
     });
 
     return [seeker, chunk];
