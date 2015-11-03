@@ -34,7 +34,7 @@ $settings = SIMRegistry::GetSettings();
 ?>
 <html>
 <head>
-	<title>Rifling Matters - Mission Replays</title>
+	<title><?=SIMRegistry::$settings['community_name']?> - Mission Replays</title>
 	<link rel='stylesheet' type='text/css' href='./res/css/main.css'>
 	<link rel='stylesheet' type='text/css' href='./res/css/missions.css'>
 	<link rel="shortcut icon" href="<?=SIMRegistry::$settings['favicon']?>">
