@@ -1,4 +1,21 @@
-﻿// http://maca134.co.uk/tutorial/write-an-arma-extension-in-c-sharp-dot-net/ - Thanks!
+/* LICENCE
+// Extension to plug into arma.
+// Copyright (C) 2015 - Jerrad 'Verox' Murphy
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+// http://maca134.co.uk/tutorial/write-an-arma-extension-in-c-sharp-dot-net/ - Thanks!
 using RGiesecke.DllExport; //https://sites.google.com/site/robertgiesecke/Home/uploads/unmanagedexports
 
 using System;
@@ -16,14 +33,14 @@ namespace SIMExt
         const string unique_server_id = "SRV1";
 
         // Constant JSON structure.
-        
-        
+
+
         const string json_data_footer = "]";
 
         static bool ready = true;
         static string mission_playthrough_hash;
         static string last_fps = "50";
-        
+
         // Strinbuilder for fun.
         static StringBuilder datastring = new StringBuilder();
         static StringBuilder groups = new StringBuilder();
@@ -125,7 +142,7 @@ namespace SIMExt
 
                 // Set the mission start timestamp.
                 mission_playthrough_hash = GenerateMD5UniqueID(mission);
-                
+
                 SendToDaemon("start_mission", "\"mission\": \"" + mission + "\"");
             }
             else if (function[0] == 'F') // Finished the current mission.
@@ -152,7 +169,7 @@ namespace SIMExt
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="data">StringBuilder containing {object},{object},{object},</param>
         /// <param name="key">Key for the json array.</param>
@@ -170,7 +187,7 @@ namespace SIMExt
 
             // Clear out the stringbuilder, it's data has been processed.
             data.Clear();
-            
+
 #if DEBUG
             DebugToFile("DS:" + processedData + "\n");
 #endif
