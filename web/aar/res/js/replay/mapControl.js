@@ -37,7 +37,7 @@ function InitMap(island) {
     currentIsland = island.toLowerCase();
 
     // Check if the map exists on the server.
-    var jqxhr = $.getJSON(map_base_url + island.toLowerCase() + "/map.json")
+    var jqxhr = $.getJSON(base_url + "/maps/" + island.toLowerCase() + "/map.json")
         .done(function(json) {
             // Kill the map container, just in case.
             $('#mapContainer').empty();
@@ -54,7 +54,7 @@ function InitMap(island) {
             }).setView(mapCenter, json.defaultZoom);
 
             // Set the tile layer.
-            L.tileLayer(map_base_url + '{m}/{z}/{x}/{y}.png', {
+            L.tileLayer(base_url + '/maps/{m}/{z}/{x}/{y}.png', {
                 attribution: '<a target="_blank" href="/CREDITS">Credits</a>',
                 minZoom: json.minZoom,
                 maxZoom: json.maxZoom,
