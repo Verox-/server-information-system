@@ -1,5 +1,14 @@
 Libraries, software, people and other things used in the creation of this tool:
 
+PEOPLE
+	Impulse9
+	UnitedOperations.net
+		For being The Greatest Gaming Community in Western History™
+	Headswe
+		Contributor
+	simwah of RiflingMatters.com
+		Provided another testbed for AAR and gratiously provides the map CDN.
+
 LIBRARIES
     FRONTEND
         JXG's jscompressor - Decompressing gzipped files in javascript. - http://jsxgraph.uni-bayreuth.de/wp/
