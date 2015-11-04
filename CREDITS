@@ -17,6 +17,9 @@ LIBRARIES
         jQuery - You know what this is.
         FontAwesome - Many, many SVG icons for free! - http://fontawesome.io/
         10T's Arma Maps - Some of the maps (the nice ones) are created by 10T - http://forums.bistudio.com/showthread.php?178671-Tiled-maps-Google-maps-compatible-%28WIP%29
+        Leaflet.label - A marker labling plugin for Leaflet. Good stuff. - https://github.com/Leaflet/Leaflet.label
+        Turbo87's Sidebar-v2 - A very pretty responsive sidebar for Leaflet (and OpenLayers/Gmaps). - https://github.com/Turbo87/sidebar-v2
+
 
     BACKEND
         phpredis - Fast PHP interface to Redis server. - https://github.com/phpredis/phpredis

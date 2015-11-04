@@ -30,13 +30,20 @@ require_once __DIR__ . '/settings.php';
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Leaflet JS test</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" async>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+        <link rel="stylesheet" href="./res/js/lib/leaflet.label/leaflet.label.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" async>
+        <link rel="stylesheet" href="./res/js/lib/SidebarV2/leaflet-sidebar.min.css" async></script>
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+
         <script src="./res/js/lib/jsxcompressor/jsxcompressor.min.js"></script> <!--http://jsxgraph.uni-bayreuth.de/wp/2009/09/29/jsxcompressor-zlib-compressed-javascript-code/-->
         <script src="./res/js/lib/RotatedMarker/L.RotatedMarker.js" async></script>  <!--https://github.com/bbecquet/Leaflet.PolylineDecorator/blob/leaflet-0.7.2/src/L.RotatedMarker.js-->
+        <script src="./res/js/lib/SidebarV2/leaflet-sidebar.min.js"></script>  <!--https://github.com/Turbo87/sidebar-v2-->
+        <script src="./res/js/lib/leaflet.label/leaflet.label.js"></script>
         <script src="./res/js/replay/mapControl.js" defer></script>
         <script src="./res/js/replay/markerControl.js" defer></script>
         <script src="./res/js/replay/replayControl.js" defer></script>
@@ -105,6 +112,11 @@ require_once __DIR__ . '/settings.php';
                 opacity: 1.0;
             }
 
+            .sidebar:hover
+            {
+                opacity: 1.0;
+            }
+
             .abutton {
                 appearance: button;
                 -moz-appearance: button;
@@ -137,21 +149,59 @@ require_once __DIR__ . '/settings.php';
 
 
         </style>
-        <div id='controlsContainer' class='controlsContainer' style="display: none;">
-            <i id="staticLinkButton" class="fa fa-link"></i>
-            <input id="replaySeeker" style="min-width:75%" type ="range" min ="0" max="100" value ="1"/>
-            <button id="playPauseButton"><i class='fa fa-play'></i></button>
-            <div class="replayTimeContainer">
-                <span id="dTime">-------</span>/<span id="tTime">-------</span>
+
+
+    <div id="sidebarv2" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#aar" role="tab"><i class="fa fa-map"></i></a></li>
+                <li><a href="#profile" role="tab"><i class="fa fa-male"></i></a></li>
+                <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-newspaper-o"></i></a></li>
+            </ul>
+
+            <ul role="tablist">
+                <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="aar">
+                <h1 class="sidebar-header">
+                    United Operations' AAR
+                    <div class="sidebar-close"><i class="fa fa-caret-left"></i></div>
+                </h1>
+
+                <p>Things can go here.</p>
+            </div>
+
+            <div class="sidebar-pane" id="profile">
+                <h1 class="sidebar-header">Players<div class="sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+            </div>
+
+            <div class="sidebar-pane" id="messages">
+                <h1 class="sidebar-header">Messages<div class="sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+            </div>
+
+            <div class="sidebar-pane" id="settings">
+                <h1 class="sidebar-header">Settings<div class="sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
             </div>
         </div>
-        <div id='staticLinkContainer' class='staticLinkContainer' style="display: none;">
-            <i id='staticLinkContainerClose' class="fa fa-times"></i>&nbsp;<span id='staticLinkText'>http://aar.unitedoperations.net/replay/D93A55C4A51AFF52E2E4BFED3BB28D89/frame/100</span>
+    </div>
+
+    <div id='controlsContainer' class='controlsContainer' style="display: none;">
+        <i id="staticLinkButton" class="fa fa-link"></i>
+        <input id="replaySeeker" style="min-width:75%" type ="range" min ="0" max="100" value ="1"/>
+        <button id="playPauseButton"><i class='fa fa-play'></i></button>
+        <div class="replayTimeContainer">
+            <span id="dTime">-------</span>/<span id="tTime">-------</span>
         </div>
+    </div>
+    <div id='staticLinkContainer' class='staticLinkContainer' style="display: none;">
+        <i id='staticLinkContainerClose' class="fa fa-times"></i>&nbsp;<span id='staticLinkText'>http://aar.unitedoperations.net/replay/D93A55C4A51AFF52E2E4BFED3BB28D89/frame/100</span>
+    </div>
         <div id="mapContainer">
-
-
-
             <!--- <div id="map"></div> -->
             <div id="logContainer"></div>
         </div>

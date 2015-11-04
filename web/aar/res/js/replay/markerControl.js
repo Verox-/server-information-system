@@ -38,7 +38,10 @@ function UpdateUnitMarkers(units)
                 popupAnchor: [2, -4]
             } );
 
-            markers[uNid] = L.rotatedMarker( units[key].latlng, { icon: mySVGIcon, angle:units[key].dir} ).addTo(map);
+            markers[uNid] = L.rotatedMarker( units[key].latlng, { icon: mySVGIcon, angle:units[key].dir} )
+                                            .bindLabel(units[key].name, { noHide: true, offset: [17, -9] })
+                                            .addTo(map);
+
 
             markers[uNid].bindPopup("<b>" + popupTitle + "</b>");
             console.log("new");
@@ -65,6 +68,7 @@ function UpdateUnitMarkers(units)
             else
             {
                 unitName = units[key].name;
+                markers[uNid].getLabel().setContent(unitName);
             }
 
             var popupContent = "<h3>" + unitName + "</h3>UID: " + units[key].uid + "<br />MPOS: " + markers[uNid].getLatLng().toString() + "<br />CPOS: GameCoord(" + units[key].pos + ")<br />GRID: Grid(" + GameCoordToGrid(units[key].pos) + ")<br />FAC: " +  units[key].fac + "<br />DIR: " +  units[key].dir
@@ -85,7 +89,7 @@ function UpdateUnitMarkers(units)
         {
             continue;
         }
-
+        // markers[markerRemoveQueue[key]].getLabel().remove();
         map.removeLayer(markers[markerRemoveQueue[key]]);
         delete markers[markerRemoveQueue[key]];
         //markers[markerRemoveQueue[key]] = undefined;

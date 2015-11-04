@@ -84,7 +84,6 @@ replay = undefined; // Garbage collection.
 var replayDuration;
 var initResult = InitMapFromReplay(frames[0], frames[frames.length - 2], frames.length);
 
-
 if (!initResult) {
     console.log("ERROR: The map was unable to be initialized.");
     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>The map was unable to be initialized.</span><br />");

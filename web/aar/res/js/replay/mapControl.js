@@ -7,8 +7,8 @@ $("#mapContainer").append("<span class='consoleMessage'>Loading map controller..
 
 function InitMapFromReplay(replayFirstFrame, replayLastFrame, replayFramesCount) {
     $("#mapContainer").append("<span class='consoleMessage'>Parsing meta frames...</span>");
-    var replayMissionInfo = JSON.parse(replayFirstFrame);
-    var replayMissionDuration = JSON.parse(replayLastFrame);
+    var replayMissionInfo = replayFirstFrame;
+    var replayMissionDuration = replayLastFrame;
     replayDuration = replayMissionDuration.time;
 
     if (replayMissionInfo.mission == undefined) {
@@ -27,8 +27,10 @@ function InitMapFromReplay(replayFirstFrame, replayLastFrame, replayFramesCount)
         $("#mapContainer").append("<span class='consoleErrorMessage'>The replay viewer is in an error state: The map is already defined.</span><br />");
         return false;
     }
+
     $("#mapContainer").append("<span class='consoleMessage'>Initializing map...</span><br />");
     InitMap(replayIsland);
+
     return true;
 }
 
@@ -50,7 +52,8 @@ function InitMap(island) {
 
             // Create the map
             map = L.map('map', {
-                crs: L.CRS.Simple
+                crs: L.CRS.Simple,
+                zoomControl: false
             }).setView(mapCenter, json.defaultZoom);
 
             // Set the tile layer.
@@ -82,15 +85,20 @@ function InitMap(island) {
             mapInfo['scaleFactor'] = json.scaleFactor;
             mapInfo['latOriginOffset'] = json.originOffset[0];
             mapInfo['lngOriginOffset'] = json.originOffset[1];
-            console.log("INFO: The map successfully initialized.");
+            console.info("The map successfully initialized.");
 
-            UpdateUnitMarkers(JSON.parse(frames[initialFramePointer]).units);
+            UpdateUnitMarkers(frames[initialFramePointer].units);
             $("#replaySeeker").val(initialFramePointer);
+
+            var sidebar_lf;
+            sidebar_lf = L.control.sidebar('sidebarv2').addTo(map);
         })
         .fail(function() {
             console.log("FAILURE.");
             $("#mapContainer").show().append("<span class='consoleErrorMessage'>Unable to locate map definition for \"" + island.toLowerCase() + "\". Does this map exist in the tiles directory?</span>");
         });
+
+
 }
 
 function UnloadMap() {
