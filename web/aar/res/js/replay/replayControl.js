@@ -41,16 +41,27 @@ while (replayFilePointer != -1) {
     replayFilePointer = chunk[0];
 }
 
+for (i = 0; i < frames.length; ++i)
+{
+    try {
+        frames[i] = JSON.parse(frames[i]);
+    }
+    catch (ex)
+    {
+
+    }
+}
+
 if (finalResult[0] == -1)
 {
     $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
 }
-else if (finalResult[0] == -2)
-{
-    $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
-    $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Server reported an unknown error.</span><br />");
-    throw new Error("R014: FATAL ERROR IN REPLAY.");
-}
+// else if (finalResult[0] == -2)
+// {
+//     $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
+//     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Server reported an unknown error.</span><br />");
+//     throw new Error("R014: FATAL ERROR IN REPLAY.");
+// }
 
 
 $("#mapContainer").append("<span class='consoleMessage'>Parsing replay frames...</span>");
@@ -139,7 +150,7 @@ function RunClock() {
         }
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
 
-        var frameJson = JSON.parse(frames[framePointer]);
+        var frameJson = frames[framePointer];
         UpdateUnitMarkers(frameJson.units);
 
         if (frameJson.kills != undefined)
