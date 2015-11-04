@@ -35,6 +35,7 @@ require_once __DIR__ . '/settings.php';
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
         <link rel="stylesheet" href="./res/js/lib/leaflet.label/leaflet.label.css">
+        <link rel="stylesheet" href="./res/css/replay.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" async>
         <link rel="stylesheet" href="./res/js/lib/SidebarV2/leaflet-sidebar.min.css" async></script>
 
@@ -178,6 +179,225 @@ require_once __DIR__ . '/settings.php';
 
             <div class="sidebar-pane" id="profile">
                 <h1 class="sidebar-header">Players<div class="sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+
+                <div class="sideContainer blufor"> <!-- Side container -->
+                    <h2><i class="fa fa-caret-right fa-1"></i> BLUFOR <i class="fa fa-caret-left fa-1"></i></h2>
+                    <div class="groupsContainer"> <!-- Groups container -->
+                    </div>
+                </div>
+
+                <div class="sideContainer redfor"> <!-- Side container -->
+                    <h2><i class="fa fa-caret-down fa-1"></i> OPFOR <i class="fa fa-caret-down fa-1"></i></h2>
+                    <div class="groupsContainer"> <!-- Groups container -->
+                        <ul>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Alpha</h4>
+                                <div>
+                                    PlayerWithASuperFuckingLongName<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Bravo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Charlie</h4><br />
+                                <div>
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Delta</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Echo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Foxtrot</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sideContainer indfor"> <!-- Side container -->
+                    <h2><i class="fa fa-caret-down fa-1"></i> INDEPENDANT <i class="fa fa-caret-down fa-1"></i></h2>
+                    <div class="groupsContainer"> <!-- Groups container -->
+                        <ul>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Alpha</h4>
+                                <div>
+                                    PlayerWithASuperFuckingLongName<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Bravo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Charlie</h4><br />
+                                <div>
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Delta</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Echo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Foxtrot</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Alpha</h4>
+                                <div>
+                                    PlayerWithASuperFuckingLongName<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Bravo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Charlie</h4><br />
+                                <div>
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Delta</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Echo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Foxtrot</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sideContainer civ"> <!-- Side container -->
+                    <h2><i class="fa fa-caret-down fa-1"></i> CIVILIAN <i class="fa fa-caret-down fa-1"></i></h2>
+                    <div class="groupsContainer"> <!-- Groups container -->
+                        <ul>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Alpha</h4>
+                                <div>
+                                    PlayerWithASuperFuckingLongName<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Bravo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Charlie</h4><br />
+                                <div>
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Delta</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Echo</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                            <li class="indivGroupContainer"> <!-- Indivdual group -->
+                                <h4>Foxtrot</h4><br />
+                                <div>
+                                    Player<br />
+                                    Player<br />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <div class="sidebar-pane" id="messages">
