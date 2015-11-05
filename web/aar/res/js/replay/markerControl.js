@@ -4,10 +4,10 @@ var kills = new Array();
 /**
  * Give me JSON formatted unit data.
  */
-function UpdateUnitMarkers(units)
+function UpdateUnitMarkers(units, groups)
 {
     var markerRemoveQueue = Object.keys(markers);
-
+    var didAddOrRemove = false;
     for (var key in units)
     {
         units[key].latlng = GameCoordToLatLng(units[key].pos);
@@ -44,7 +44,8 @@ function UpdateUnitMarkers(units)
 
 
             markers[uNid].bindPopup("<b>" + popupTitle + "</b>");
-            console.log("new");
+            //console.log("new");
+            didAddOrRemove = true;
         }
         else
         {
@@ -79,23 +80,118 @@ function UpdateUnitMarkers(units)
 
             // Update the CPOS.
             markers[uNid].getPopup().setContent(popupContent).update();
-            console.log("update");
+            //console.log("update");
+        }
+    }
+    if (markerRemoveQueue.length > 0)
+    {
+        for (var key in markerRemoveQueue)
+        {
+            if (key == undefined)
+            {
+                continue;
+            }
+            // markers[markerRemoveQueue[key]].getLabel().remove();
+            map.removeLayer(markers[markerRemoveQueue[key]]);
+            delete markers[markerRemoveQueue[key]];
+            //markers[markerRemoveQueue[key]] = undefined;
+            //console.log("remove");
+        }
+
+        didAddOrRemove = true;
+    }
+
+    if (didAddOrRemove == true)
+    {
+        UpdatePlayersTab(units, groups);
+    }
+
+}
+
+// AH THIS IS EVEN WORSE PLEASE JUST DON'T LOOK I SWEAR ITS NOT CALLED VERY OFTEN ANYWAY!
+function UpdatePlayersTab(units, groups)
+{
+    var gplist = BuildGroupPlayerList(units, groups);
+
+    $(".sideContainer > .groupsContainer > ul").html("");
+
+    for (var ld in gplist[1])
+    {
+        var groupIdentifer = gplist[0][ld].id;
+        var html = "<li class=\"indivGroupContainer\"><h4>" + groupIdentifer + "</h4><div>";
+        for (var lda in gplist[1][ld])
+        {
+            var playerName = gplist[1][ld][lda];
+            html = html + playerName + "<br />";
+            //done.
+        }
+        html = html + "</div></li>";
+        switch (gplist[0][ld].side) {
+            case "WEST":
+                $("#bluforSideContainer > .groupsContainer > ul").append(html);
+                break;
+            case "EAST":
+                $("#redforSideContainer > .groupsContainer > ul").append(html);
+                break;
+            case "GUER":
+                $("#indforSideContainer > .groupsContainer > ul").append(html);
+                break;
+            default:
+                //console.log("OH SHIT!");
+        }
+    }
+}
+
+//BuildGroupPlayerList(frames[20].units, frames[20].groups)
+function BuildGroupPlayerList(units, groups)
+{
+    /// We build the group identifers dictionary first.
+    var gIdents = new Array();
+    for (var gIdent in groups)
+    {
+        gIdents[groups[gIdent].leader] = Array();
+        gIdents[groups[gIdent].leader]["id"] = groups[gIdent].groupid;
+    }
+
+    /// Next we build the group units dictionary.
+    var gUnits = new Array();
+    for (var gUnit in units)
+    {
+        var gUnitGroup = units[gUnit].group.substring(2);
+        // Find my group leader.
+        // FML THIS IS DIRTY! I hate myself.
+        for (var leader in gIdents)
+        {
+            if (gIdents[leader].id == gUnitGroup)
+            {
+                if (gUnits[leader] == undefined)
+                {
+                    gUnits[leader] = [units[gUnit].name];
+                    gIdents[leader]["side"] = units[gUnit].fac;
+                    continue;
+                }
+                else
+                {
+                    gUnits[leader].push(units[gUnit].name);
+                    continue;
+                }
+            }
         }
     }
 
-    for (var key in markerRemoveQueue)
-    {
-        if (key == undefined)
-        {
-            continue;
-        }
-        // markers[markerRemoveQueue[key]].getLabel().remove();
-        map.removeLayer(markers[markerRemoveQueue[key]]);
-        delete markers[markerRemoveQueue[key]];
-        //markers[markerRemoveQueue[key]] = undefined;
-        console.log("remove");
-    }
-    //console.log(units);
+    return [gIdents, gUnits];
+
+    // Groups -
+    //         Leader  - unit
+    //                 - unit
+    //                 - unit
+    //         Leader  - unit
+    //                 - unit
+    //
+    // GroupIdentifers -
+    //         Leader  - Identifer
+    //         Leader  - Identifer
+
 }
 
 /**

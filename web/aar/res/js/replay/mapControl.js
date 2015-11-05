@@ -87,7 +87,7 @@ function InitMap(island) {
             mapInfo['lngOriginOffset'] = json.originOffset[1];
             console.info("The map successfully initialized.");
 
-            UpdateUnitMarkers(frames[initialFramePointer].units);
+            UpdateUnitMarkers(frames[initialFramePointer].units, frames[initialFramePointer].groups);
             $("#replaySeeker").val(initialFramePointer);
 
             var sidebar_lf;

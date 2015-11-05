@@ -6,6 +6,10 @@ $.ajax({
     success: function(data, status, request) {
         download_size = request.getResponseHeader('Content-Length');
         $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file (" + (download_size / 1000000).toFixed(2) + "MB)...</span>");
+        if (download_size > 100000)
+        {
+            alert("Large replay warning:\n\nThis is a large replay and may take some time to download.\nThe page may appear to be frozen.\nPlease be patient.");
+        }
     },
     error:  function(request, status, error) {
         $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file...</span>");
@@ -32,6 +36,7 @@ while (replayFilePointer != -1) {
     if (chunk[0] < 0)
     {
         finalResult = chunk;
+        console.info("Finished downloading replay.");
         break;
     }
 
@@ -51,7 +56,7 @@ for (i = 0; i < frames.length; ++i)
 
     }
 }
-
+console.info("Finished parsing replay.");
 if (finalResult[0] == -1)
 {
     $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
@@ -97,6 +102,7 @@ function InitUIControl(frames) {
     $("#replaySeeker").attr("max", frames);
     window.alert("This tool is in Beta.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n  https://github.com/Verox-/aar \nor to Verox either in person or on the forum thread.\n\n");
     $(".controlsContainer").show(300);
+    $("#sidebarv2").show(300);
 }
 
 function DownloadReplayChunk(seek)
@@ -150,7 +156,7 @@ function RunClock() {
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
 
         var frameJson = frames[framePointer];
-        UpdateUnitMarkers(frameJson.units);
+        UpdateUnitMarkers(frameJson.units, frameJson.groups);
 
         if (frameJson.kills != undefined)
         {
@@ -204,7 +210,7 @@ function RunClock() {
         $("#staticLinkContainer").hide();
         lastPlayState = (replayClock != null ? true : false);
         ToggleClock(false);
-        console.log(lastPlayState);
+        //console.log(lastPlayState);
         $("#replaySeeker").mousemove(function() {
             framePointer = Number($("#replaySeeker").val());
             UpdateInterface(); //console.log();

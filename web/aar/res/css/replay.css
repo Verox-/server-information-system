@@ -20,9 +20,9 @@
 .sideContainer .groupsContainer ul li {
     display: inline-block;
     color: black;
-    margin: 3px 3px;
+    margin: 3px 1px;
     padding: 3px;
-    width: 25%;
+    width: 28%;
     border: 1px dashed darkgrey;
     vertical-align: top;
 }
