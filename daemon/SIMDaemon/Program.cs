@@ -183,7 +183,7 @@ namespace SIMDaemon
                 #endif
 
                 StringContent request_data = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await inet.PostAsync("http://aar.unitedoperations.net/api/v1/data.php", request_data);
+                var response = await inet.PostAsync(config.ApiEndpoint, request_data);
 
                 #if DEBUG
                 Console.WriteLine("[DEBUG/PIPE/simext] Data sent.");
