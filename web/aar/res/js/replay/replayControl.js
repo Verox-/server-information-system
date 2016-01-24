@@ -33,17 +33,17 @@ while (replayFilePointer != -1) {
     chunk = DownloadReplayChunk(replayFilePointer)
     console.log("chunkptr:" + chunk[0]);
 
-    if (chunk[0] < 0)
+    frames = frames.concat(chunk[1].split("\n"));
+    console.log("frames: " + frames.length);
+    //replay += chunk[1];
+    replayFilePointer = chunk[0];
+	
+	if (chunk[0] < 0)
     {
         finalResult = chunk;
         console.info("Finished downloading replay.");
         break;
     }
-
-    frames = frames.concat(chunk[1].split("\n"));
-    console.log("frames: " + frames.length);
-    //replay += chunk[1];
-    replayFilePointer = chunk[0];
 }
 
 for (i = 0; i < frames.length; ++i)
