@@ -92,7 +92,8 @@ namespace SIMDaemon
                     // Let the user know something went wrong.
                     Console.WriteLine("\n[FATAL/PIPE/simext] Unable to initalize new pipe. This is unrecoverable.");
                     Console.WriteLine("[FATAL/PIPE/simext] " + ex.Message);
-
+                    Console.WriteLine("[INFO] This program is about to crash.");
+                    var throwaway = Console.ReadLine();
                     // Aaand rethrow. This kills the program.
                     throw;
                 }
@@ -122,9 +123,9 @@ namespace SIMDaemon
                     if (output != null)
                         SendHTTP(output);
 
-                    #if DEBUG
-                    Console.WriteLine("[DEBUG/PIPE/simext] " + output); // Debug output.
-                    #endif
+                    //#if DEBUG
+                    //Console.WriteLine("[DEBUG/PIPE/simext] " + output); // Debug output.
+                    //#endif
                 }
 
                 #if !DEBUG
@@ -141,10 +142,11 @@ namespace SIMDaemon
             var serializer = new XmlSerializer(typeof(DaemonConfiguration));
             if (!File.Exists(ConfigurationPath))
             {
-                Console.WriteLine("[WARN] No configuration found, a default generated.");
+                Console.WriteLine("[WARN/config] No configuration found, a default will be generated.");
+                Console.WriteLine();
                 var config = new DaemonConfiguration()
                 {
-                    ApiEndpoint = "http://aar.unitedoperations.net/api/v1/data.php",
+                    ApiEndpoint = "http://mydomain.com/aar/api/v1/data.php",
                     ServerName = "SRV1"
                 };
                 using (var stream = File.OpenWrite(ConfigurationPath))
@@ -163,16 +165,7 @@ namespace SIMDaemon
         {
             var handle = GetConsoleWindow();
 
-            if (show)
-            {
-                // Show
-                ShowWindow(handle, SW_SHOW);
-            }
-            else
-            {
-                // Hide
-                ShowWindow(handle, SW_HIDE);
-            }
+            ShowWindow(handle, show ? SW_SHOW : SW_HIDE);
         }
 
         static async void SendHTTP(string data) {
@@ -182,11 +175,11 @@ namespace SIMDaemon
                 Console.WriteLine("[DEBUG/PIPE/simext] Sending data.");
                 #endif
 
-                StringContent request_data = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await inet.PostAsync(config.ApiEndpoint, request_data);
+                StringContent requestData = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await inet.PostAsync(Config.ApiEndpoint, requestData);
 
                 #if DEBUG
-                Console.WriteLine("[DEBUG/PIPE/simext] Data sent.");
+                Console.WriteLine("[DEBUG/PIPE/simext] Data sent. Response code: " + response.StatusCode);
                 #endif
             }
             catch (Exception ex)
