@@ -144,7 +144,7 @@ namespace SIMDaemon
                 Console.WriteLine("[WARN] No configuration found, a default generated.");
                 var config = new DaemonConfiguration()
                 {
-                    ApiEndpoint = "http://aar.unitedoperations.net/api/v1/data.php",
+                    ApiEndpoint = "http://API.NOT.SET/api/v1/data.php",
                     ServerName = "SRV1"
                 };
                 using (var stream = File.OpenWrite(ConfigurationPath))
@@ -183,7 +183,7 @@ namespace SIMDaemon
                 #endif
 
                 StringContent request_data = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await inet.PostAsync(config.ApiEndpoint, request_data);
+                var response = await inet.PostAsync(Config.ApiEndpoint, request_data);
 
                 #if DEBUG
                 Console.WriteLine("[DEBUG/PIPE/simext] Data sent.");
