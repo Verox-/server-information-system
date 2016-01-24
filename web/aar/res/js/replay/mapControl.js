@@ -85,6 +85,8 @@ function InitMap(island) {
             mapInfo['scaleFactor'] = json.scaleFactor;
             mapInfo['latOriginOffset'] = json.originOffset[0];
             mapInfo['lngOriginOffset'] = json.originOffset[1];
+			mapInfo['mapSourceSize'] = json.mapSourceSize;
+			mapInfo['gameXYBounds'] = json.gameXYBounds;
             console.info("The map successfully initialized.");
 
             UpdateUnitMarkers(frames[initialFramePointer].units, frames[initialFramePointer].groups);
@@ -97,8 +99,28 @@ function InitMap(island) {
             console.log("FAILURE.");
             $("#mapContainer").show().append("<span class='consoleErrorMessage'>Unable to locate map definition for \"" + island.toLowerCase() + "\". Does this map exist in the tiles directory?</span>");
         });
+}
 
-
+function CalculateScaleFactor() {
+    if (mapInfo['mapSourceSize'] == undefined) {
+        console.error("\"mapSourceSize\" field in map definition (map.json) has not been set.");
+        console.error("This is the size of the image in pixels, expressed as an array, and is required for calculation.");
+        console.error("Example: \"mapSourceSize\": [26700,26700],");
+        return false;
+    }
+    if (mapInfo['gameXYBounds'] == undefined) {
+        console.error("\"gameXYBounds\" field in map definition (map.json) has not been set.");
+        console.error("This is the bottom-left and top-right in-game coordinates of the map. This is required for scalefactor calculation.");
+        console.error("\"gameXYBounds\": [[0,0],[5120,5120]],");
+        return false;
+    }
+    var northEast = map.unproject([mapInfo['mapSourceSize'][0], mapInfo['mapSourceSize'][1]], map.getMaxZoom());
+    var calcScaleFac = mapInfo['gameXYBounds'][1][0] / northEast.lng;
+    console.info("Projected bounds: " + northEast.lng);
+    console.info("Currently Defined Scale Factor: " + mapInfo['scaleFactor']);
+    console.info("Calculated Scale Factor: " + calcScaleFac);
+    console.warn("Above calculated scale factor is only valid for square maps.\nManual adjustment may be required if map X/Y are not equal.");
+    return calcScaleFac;
 }
 
 function UnloadMap() {
