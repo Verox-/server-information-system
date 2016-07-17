@@ -7,8 +7,8 @@ $("#mapContainer").append("<span class='consoleMessage'>Loading map controller..
 
 function InitMapFromReplay(replayFirstFrame, replayLastFrame, replayFramesCount) {
     $("#mapContainer").append("<span class='consoleMessage'>Parsing meta frames...</span>");
-    var replayMissionInfo = JSON.parse(replayFirstFrame);
-    var replayMissionDuration = JSON.parse(replayLastFrame);
+    var replayMissionInfo = replayFirstFrame;
+    var replayMissionDuration = replayLastFrame;
     replayDuration = replayMissionDuration.time;
 
     if (replayMissionInfo.mission == undefined) {
@@ -27,8 +27,10 @@ function InitMapFromReplay(replayFirstFrame, replayLastFrame, replayFramesCount)
         $("#mapContainer").append("<span class='consoleErrorMessage'>The replay viewer is in an error state: The map is already defined.</span><br />");
         return false;
     }
+
     $("#mapContainer").append("<span class='consoleMessage'>Initializing map...</span><br />");
     InitMap(replayIsland);
+
     return true;
 }
 
@@ -50,7 +52,8 @@ function InitMap(island) {
 
             // Create the map
             map = L.map('map', {
-                crs: L.CRS.Simple
+                crs: L.CRS.Simple,
+                zoomControl: false
             }).setView(mapCenter, json.defaultZoom);
 
             // Set the tile layer.
@@ -82,15 +85,42 @@ function InitMap(island) {
             mapInfo['scaleFactor'] = json.scaleFactor;
             mapInfo['latOriginOffset'] = json.originOffset[0];
             mapInfo['lngOriginOffset'] = json.originOffset[1];
-            console.log("INFO: The map successfully initialized.");
+			mapInfo['mapSourceSize'] = json.mapSourceSize;
+			mapInfo['gameXYBounds'] = json.gameXYBounds;
+            console.info("The map successfully initialized.");
 
-            UpdateUnitMarkers(JSON.parse(frames[initialFramePointer]).units);
+            UpdateUnitMarkers(frames[initialFramePointer].units, frames[initialFramePointer].groups);
             $("#replaySeeker").val(initialFramePointer);
+
+            var sidebar_lf;
+            sidebar_lf = L.control.sidebar('sidebarv2').addTo(map);
         })
         .fail(function() {
             console.log("FAILURE.");
             $("#mapContainer").show().append("<span class='consoleErrorMessage'>Unable to locate map definition for \"" + island.toLowerCase() + "\". Does this map exist in the tiles directory?</span>");
         });
+}
+
+function CalculateScaleFactor() {
+    if (mapInfo['mapSourceSize'] == undefined) {
+        console.error("\"mapSourceSize\" field in map definition (map.json) has not been set.");
+        console.error("This is the size of the image in pixels, expressed as an array, and is required for calculation.");
+        console.error("Example: \"mapSourceSize\": [26700,26700],");
+        return false;
+    }
+    if (mapInfo['gameXYBounds'] == undefined) {
+        console.error("\"gameXYBounds\" field in map definition (map.json) has not been set.");
+        console.error("This is the bottom-left and top-right in-game coordinates of the map. This is required for scalefactor calculation.");
+        console.error("\"gameXYBounds\": [[0,0],[5120,5120]],");
+        return false;
+    }
+    var northEast = map.unproject([mapInfo['mapSourceSize'][0], mapInfo['mapSourceSize'][1]], map.getMaxZoom());
+    var calcScaleFac = mapInfo['gameXYBounds'][1][0] / northEast.lng;
+    console.info("Projected bounds: " + northEast.lng);
+    console.info("Currently Defined Scale Factor: " + mapInfo['scaleFactor']);
+    console.info("Calculated Scale Factor: " + calcScaleFac);
+    console.warn("Above calculated scale factor is only valid for square maps.\nManual adjustment may be required if map X/Y are not equal.");
+    return calcScaleFac;
 }
 
 function UnloadMap() {

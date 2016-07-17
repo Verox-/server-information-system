@@ -1,0 +1,72 @@
+.sideContainer {
+    border-radius: 5px;
+    margin: 10px 0px;
+    padding: 3px;
+}
+
+.sideContainer .groupsContainer {
+    background: white;
+    width: 100%;
+    border-radius: 0px 0px 3px 3px;
+}
+
+.sideContainer .groupsContainer ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.sideContainer .groupsContainer ul li {
+    display: inline-block;
+    color: black;
+    margin: 3px 1px;
+    padding: 3px;
+    width: 28%;
+    border: 1px dashed darkgrey;
+    vertical-align: top;
+}
+
+.sideContainer .groupsContainer ul li > div {
+    font-size: 12px;
+    text-align: left;
+    word-wrap: break-word
+}
+
+.sideContainer .groupsContainer ul li h4{
+    display: inline;
+    text-align: center;
+}
+
+
+.sideContainer h2 {
+    text-align: center;
+    padding: 0px 5px;
+    margin: 0px;
+}
+
+.blufor {
+    background-color: darkblue;
+    color: white;
+}
+
+.redfor {
+    background-color: darkred;
+    color: white;
+}
+
+.indfor {
+    background-color: darkgreen;
+    color: white;
+}
+
+.civ {
+    background-color: purple;
+    color: white;
+}
+
+div#two {
+    margin-left: 15%;
+    height: 200px;
+    background: black;
+}

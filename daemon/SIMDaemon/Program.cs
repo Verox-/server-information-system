@@ -1,4 +1,21 @@
-﻿using System;
+// /* LICENCE
+// Daemon for data.
+// Copyright (C) 2015 - Jerrad 'Verox' Murphy
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Collections.Generic;
@@ -69,13 +86,14 @@ namespace SIMDaemon
                 {
                     pipeServer = new NamedPipeServerStream(UniquePipeName, PipeDirection.InOut);
                     Console.WriteLine(" success.");
-                } 
+                }
                 catch (Exception ex) // We're rethrowing this.
                 {
                     // Let the user know something went wrong.
                     Console.WriteLine("\n[FATAL/PIPE/simext] Unable to initalize new pipe. This is unrecoverable.");
                     Console.WriteLine("[FATAL/PIPE/simext] " + ex.Message);
-
+                    Console.WriteLine("[INFO] This program is about to crash.");
+                    var throwaway = Console.ReadLine();
                     // Aaand rethrow. This kills the program.
                     throw;
                 }
@@ -96,7 +114,7 @@ namespace SIMDaemon
 
                 // While we have a connection
                 while (pipeServer.IsConnected) {
-                    #if DEBUG           
+                    #if DEBUG
                     Console.WriteLine("[DEBUG/PIPE/simext] TICK"); // Debug output.
                     #endif
                     string output = sr.ReadLine(); // Take data from the pipe...
@@ -105,9 +123,9 @@ namespace SIMDaemon
                     if (output != null)
                         SendHTTP(output);
 
-                    #if DEBUG
-                    Console.WriteLine("[DEBUG/PIPE/simext] " + output); // Debug output.
-                    #endif
+                    //#if DEBUG
+                    //Console.WriteLine("[DEBUG/PIPE/simext] " + output); // Debug output.
+                    //#endif
                 }
 
                 #if !DEBUG
@@ -115,7 +133,7 @@ namespace SIMDaemon
                 ShowWindow(true);
                 #endif
 
-                Console.Write("[WARN/PIPE/simext] Pipe disconnected... "); // ACH, AIT ALL GON TITS UP, ERRR!               
+                Console.Write("[WARN/PIPE/simext] Pipe disconnected... "); // ACH, AIT ALL GON TITS UP, ERRR!
             }
         }
 
@@ -124,10 +142,11 @@ namespace SIMDaemon
             var serializer = new XmlSerializer(typeof(DaemonConfiguration));
             if (!File.Exists(ConfigurationPath))
             {
-                Console.WriteLine("[WARN] No configuration found, a default generated.");
+                Console.WriteLine("[WARN/config] No configuration found, a default will be generated.");
+                Console.WriteLine();
                 var config = new DaemonConfiguration()
                 {
-                    ApiEndpoint = "http://aar.unitedoperations.net/api/v1/data.php",
+                    ApiEndpoint = "http://API.NOT.SET/api/v1/data.php",
                     ServerName = "SRV1"
                 };
                 using (var stream = File.OpenWrite(ConfigurationPath))
@@ -146,16 +165,7 @@ namespace SIMDaemon
         {
             var handle = GetConsoleWindow();
 
-            if (show)
-            {
-                // Show
-                ShowWindow(handle, SW_SHOW);
-            }
-            else
-            {
-                // Hide
-                ShowWindow(handle, SW_HIDE);
-            }
+            ShowWindow(handle, show ? SW_SHOW : SW_HIDE);
         }
 
         static async void SendHTTP(string data) {
@@ -165,13 +175,13 @@ namespace SIMDaemon
                 Console.WriteLine("[DEBUG/PIPE/simext] Sending data.");
                 #endif
 
-                StringContent request_data = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await inet.PostAsync("http://aar.unitedoperations.net/api/v1/data.php", request_data);
+                StringContent requestData = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await inet.PostAsync(Config.ApiEndpoint, requestData);
 
                 #if DEBUG
-                Console.WriteLine("[DEBUG/PIPE/simext] Data sent.");
+                Console.WriteLine("[DEBUG/PIPE/simext] Data sent. Response code: " + response.StatusCode);
                 #endif
-            } 
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("[EXCEPTION/PIPE/simext] An exception occured sending the data to the server.");

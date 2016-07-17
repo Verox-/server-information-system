@@ -6,6 +6,10 @@ $.ajax({
     success: function(data, status, request) {
         download_size = request.getResponseHeader('Content-Length');
         $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file (" + (download_size / 1000000).toFixed(2) + "MB)...</span>");
+        if (download_size > 100000)
+        {
+            alert("Large replay warning:\n\nThis is a large replay and may take some time to download.\nThe page may appear to be frozen.\nPlease be patient.");
+        }
     },
     error:  function(request, status, error) {
         $("#mapContainer").append("<span class='consoleMessage'>Downloading and decompressing replay file...</span>");
@@ -29,28 +33,40 @@ while (replayFilePointer != -1) {
     chunk = DownloadReplayChunk(replayFilePointer)
     console.log("chunkptr:" + chunk[0]);
 
-    if (chunk[0] < 0)
-    {
-        finalResult = chunk;
-        break;
-    }
-
     frames = frames.concat(chunk[1].split("\n"));
     console.log("frames: " + frames.length);
     //replay += chunk[1];
     replayFilePointer = chunk[0];
+	
+	if (chunk[0] < 0)
+    {
+        finalResult = chunk;
+        console.info("Finished downloading replay.");
+        break;
+    }
 }
 
+for (i = 0; i < frames.length; ++i)
+{
+    try {
+        frames[i] = JSON.parse(frames[i]);
+    }
+    catch (ex)
+    {
+
+    }
+}
+console.info("Finished parsing replay.");
 if (finalResult[0] == -1)
 {
     $("#mapContainer").append("<span class='consoleMessage'>done.</span><br />");
 }
-else if (finalResult[0] == -2)
-{
-    $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
-    $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Server reported an unknown error.</span><br />");
-    throw new Error("R014: FATAL ERROR IN REPLAY.");
-}
+// else if (finalResult[0] == -2)
+// {
+//     $("#mapContainer").append("<span class='consoleMessage'>failed.</span><br />");
+//     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>Replay appears to be corrupted or in an invalid format: Server reported an unknown error.</span><br />");
+//     throw new Error("R014: FATAL ERROR IN REPLAY.");
+// }
 
 
 $("#mapContainer").append("<span class='consoleMessage'>Parsing replay frames...</span>");
@@ -73,7 +89,6 @@ replay = undefined; // Garbage collection.
 var replayDuration;
 var initResult = InitMapFromReplay(frames[0], frames[frames.length - 2], frames.length);
 
-
 if (!initResult) {
     console.log("ERROR: The map was unable to be initialized.");
     $("#mapContainer").append("<br /><span class='consoleErrorMessage'>The map was unable to be initialized.</span><br />");
@@ -87,6 +102,7 @@ function InitUIControl(frames) {
     $("#replaySeeker").attr("max", frames);
     window.alert("This tool is in Beta.\n\nPlease report any and all bugs, comments or suggestions on the bug tracker at \n  https://github.com/Verox-/aar \nor to Verox either in person or on the forum thread.\n\n");
     $(".controlsContainer").show(300);
+    $("#sidebarv2").show(300);
 }
 
 function DownloadReplayChunk(seek)
@@ -139,8 +155,8 @@ function RunClock() {
         }
         $("#dTime").html(TimeStringify(framePointer * avgFrameDuration / 100, frames.length * avgFrameDuration / 100)); //"T+" + Math.round(framePointer * avgFrameDuration/100) + "s"
 
-        var frameJson = JSON.parse(frames[framePointer]);
-        UpdateUnitMarkers(frameJson.units);
+        var frameJson = frames[framePointer];
+        UpdateUnitMarkers(frameJson.units, frameJson.groups);
 
         if (frameJson.kills != undefined)
         {
@@ -194,7 +210,7 @@ function RunClock() {
         $("#staticLinkContainer").hide();
         lastPlayState = (replayClock != null ? true : false);
         ToggleClock(false);
-        console.log(lastPlayState);
+        //console.log(lastPlayState);
         $("#replaySeeker").mousemove(function() {
             framePointer = Number($("#replaySeeker").val());
             UpdateInterface(); //console.log();
